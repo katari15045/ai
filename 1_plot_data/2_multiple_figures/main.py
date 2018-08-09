@@ -12,7 +12,7 @@ list_x = ['TV', 'Radio', 'Newspaper']
 # Plot Data
 count = 1
 for x_label in list_x:
-	fig = plt.figure(count)
+	plt.figure(count)
 	x = data[x_label]
 	plt.scatter(x, y)
 	plt.xlabel(x_label)
