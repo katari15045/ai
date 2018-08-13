@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
+from sklearn.model_selection import RandomizedSearchCV
 
 start_time = time()
 
@@ -19,6 +20,7 @@ print("x : " + str(x.shape))
 print("y : " + str(y.shape))
 x_train, x_test, y_train, y_test = train_test_split(x, y)
 
+'''
 # Reduce Dimensions
 print("Reducing Dimensions...")
 pca = PCA(n_components=2)
@@ -26,34 +28,26 @@ x_2_dim = pca.fit_transform(x)
 print("Post PCA, X : " + str(x_2_dim.shape))
 
 # Plot Data
+
 print("Plotting Data...")
 plt.scatter(x_2_dim[:, 0], x_2_dim[:, 1], c=y, s=50)
-plt.show()
+plt.savefig("data.png")
+'''
 
-# Train the model
-print("Training Model...")
-knn = KNeighborsClassifier(n_neighbors=5)
-knn.fit(x_train, y_train)
+# Find Best Parametres
+print("Finding best params...")
+params = {}
+params["n_neighbors"] = range(1, 31)
+knn = KNeighborsClassifier()
+grid = RandomizedSearchCV(knn, params, cv=10, scoring="accuracy", n_jobs=-1, n_iter=16, verbose=1)
+grid.fit(x, y)
+print("Best Accuracy : " + str(grid.best_score_))
+print("Best Params : " + str(grid.best_params_))
+best_model = grid.best_estimator_
 
 # Save Model
 print("Saving Model...")
-joblib.dump(knn, "model.pkl")
-
-# Predict
-print("Predicting...")
-y_pred = knn.predict(x_test)
-accuracy = metrics.accuracy_score(y_test, y_pred)
-print("Accuracy : " + str(accuracy))
-
-# Store Predictions
-print("Storing Predictions...")
-book = open("pred.txt", "a")
-count = 1
-book.write("ImageId,Label\n")
-while(count <= len(y_pred)):
-    book.write(str(count) + "," + str(y_pred[count-1]) + "\n")
-    count = count+1
-book.close()
+joblib.dump(best_model, "model.pkl")
 
 end_time = time()
 elapsed_time = end_time-start_time
