@@ -13,4 +13,5 @@ Miscellaneous :
 	jobs
 
 2. See how much CPU percentage your processes are using (100% ~ 1 whole CPU or 1 whole core)
-	top -n 1| grep katari | awk '{print $9}' | awk '{s=s+$1}END{print s}'
+	top -n 3 | grep katari15 | awk '{print $9}' | awk 'FIRST{s=0}{s=s+$1}END{print s}' 
+   Explanation : Before anything {s=0} is executed. In each iteration, {s=s+$1} is executed. At the end, {print s} is executed
