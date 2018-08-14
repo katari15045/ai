@@ -18,4 +18,7 @@ Miscellaneous :
 
 2. See how much CPU percentage your processes are using (100% ~ 1 whole CPU or 1 whole core)
 	top -n 1 | grep katari15 | awk '{print $10}' | awk 'BEGIN{s=0}{s+=$1}END{print s}'
-   Explanation : Before anything {s=0} is executed. In each iteration, {s=s+$1} is executed. At the end, {print s} is executed
+   Explanation : top -n 1 ===>  top runs for 1 iteration
+		grep katari15 ===> only those rows are printed which have katari15 in them
+		awk '{print $10}' ===> extracts 10th column (Delimiter is " ")
+		awk 'BEGIN{s=0}{s=s+$1}END{print s}' ===> Before anything {s=0} is executed. In each iteration, {s=s+$1} is executed. At the end, {print s} is executed
