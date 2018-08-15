@@ -19,3 +19,4 @@ ran_sear = RandomizedSearchCV(knn, params, cv=10, scoring="accuracy", n_iter=10,
 ran_sear.fit(X, y)
 print("Best Accuracy : " + str(ran_sear.best_score_))
 print("Best Params : " + str(ran_sear.best_params_))
+print("Means : " + str(ran_sear.cv_results_["mean_test_score"]))
