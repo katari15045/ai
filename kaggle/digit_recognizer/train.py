@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import metrics
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
 
 start_time = time()
 
@@ -39,8 +39,9 @@ print("Finding best params...")
 params = {}
 params["n_neighbors"] = range(1, 31)
 knn = KNeighborsClassifier()
-grid = RandomizedSearchCV(knn, params, cv=10, scoring="accuracy", n_jobs=-1, n_iter=16, verbose=1)
+grid = GridSearchCV(knn, params, cv=10, scoring="accuracy", n_jobs=-1, verbose=1)
 grid.fit(x, y)
+print("Grid Scores : " + str(grid.cv_results_["mean_test_score"]))
 print("Best Accuracy : " + str(grid.best_score_))
 print("Best Params : " + str(grid.best_params_))
 best_model = grid.best_estimator_
