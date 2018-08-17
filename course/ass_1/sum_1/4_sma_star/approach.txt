@@ -1,0 +1,6 @@
+pre-requisite : approach doc of a_star
+
+SMA* (Simplified Memory Bounded A*)
+-----------------------------------
+
+1. Before retrieving the grid with minimum total_cost, make sure the the total # of grids doesn't exceed the threshold, say, 180; if exceeded, remove the grid with maximum total_cost

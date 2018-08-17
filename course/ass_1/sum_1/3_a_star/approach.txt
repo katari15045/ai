@@ -1,0 +1,11 @@
+Pre-requisite : Read the approach doc of BFS
+
+1. Instead of using LIFO or FIFO order for retrieving the unique configurations of grid, the configuration with minimum total_cost is chosen
+
+2. total_cost (of a cell) = previous_cost + future_cost
+	(or)
+   total_cost (of a cell) = #_of_cells_it_has_travelled_from_it's_original_given_random_configuration + "how_far_from_the_position_in_desired_grid_configuration (Manhattan Distance) i.e in terms of # of cells"
+	implies,
+   total_cost_of_the_grid = total_cost_of_each_cell_in_it
+
+3. In step 1, make sure you remove the grid with minimum total_cost which you've retrieved
