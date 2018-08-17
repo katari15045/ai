@@ -1,56 +1,83 @@
 from math import sqrt
+from queue import LifoQueue
+from time import time
+
+start_time = time()
+
+class dfs_params:
+    def __init__(self, grid, n, empty_row, empty_col, configs, tar_conf):
+        self.grid = grid
+        self.n = n
+        self.empty_row = empty_row
+        self.empty_col = empty_col
+        self.configs = configs
+        self.tar_conf = tar_conf
 
 def dfs(grid, n, empty_row, empty_col, configs, tar_conf):
+    stack = LifoQueue()
     rows = int(sqrt(n+1))
-    # Left check
-    if(empty_col != 0):
-        swap_cells(grid, empty_row, empty_col-1, empty_row, empty_col)
-        if(is_dup_conf(grid, configs) == True):
-            swap_cells(grid, empty_row, empty_col-1, empty_row, empty_col)
-        else:
-            cur_conf = get_conf(grid)
-            if(cur_conf == tar_conf):
-                print("tar_conf")
-                return
-            empty_col = empty_col-1
-            dfs(grid, n, empty_row, empty_col, configs, tar_conf)
-    # Right Check
-    if(empty_col != (rows-1)):
-        swap_cells(grid, empty_row, empty_col+1, empty_row, empty_col)
-        if(is_dup_conf(grid, configs) == True):
-            swap_cells(grid, empty_row, empty_col+1, empty_row, empty_col)
-        else:
-            cur_conf = get_conf(grid)
-            if(cur_conf == tar_conf):
-                print("tar_conf")
-                return
-            empty_col = empty_col + 1
-            dfs(grid, n, empty_row, empty_col, configs, tar_conf)
-    # Top Check
-    if(empty_row != 0):
-        swap_cells(grid, empty_row-1, empty_col, empty_row, empty_col)
-        if(is_dup_conf(grid, configs) == True):
-            swap_cells(grid, empty_row-1, empty_col, empty_row, empty_col)
-        else:
-            cur_conf = get_conf(grid)
-            if(cur_conf == tar_conf):
-                print("tar_conf")
-                return
-            empty_row = empty_row-1
-            dfs(grid, n, empty_row, empty_col, configs, tar_conf)
-    # Bottom Check
-    if(empty_row != (rows-1)):
-        swap_cells(grid, empty_row+1, empty_col, empty_row, empty_col)
-        if(is_dup_conf(grid, configs) == True):
+    obj = dfs_params(grid, n, empty_row, empty_col, configs, tar_conf)
+    stack.put(obj)
+    while(stack.qsize() is not 0):
+        obj = stack.get()
+        grid = obj.grid
+        n = obj.n
+        empty_row = obj.empty_row
+        empty_col = obj.empty_col
+        configs = obj.configs
+        tar_conf = obj.tar_conf
+        # Bottom Check
+        if(empty_row != (rows-1)):
             swap_cells(grid, empty_row+1, empty_col, empty_row, empty_col)
-        else:
-            cur_conf = get_conf(grid)
-            if(cur_conf == tar_conf):
-                print("tar_conf")
-                return
-            empty_row = empty_row+1
-            dfs(grid, n, empty_row, empty_col, configs, tar_conf)
-
+            if(is_dup_conf(grid, configs) == True):
+                swap_cells(grid, empty_row+1, empty_col, empty_row, empty_col)
+            else:
+                cur_conf = get_conf(grid)
+                if(cur_conf == tar_conf):
+                    print("tar_conf")
+                    return
+                empty_row = empty_row+1
+                obj = dfs_params(grid, n, empty_row, empty_col, configs, tar_conf)
+                stack.put(obj)
+        # Top Check
+        if(empty_row != 0):
+            swap_cells(grid, empty_row-1, empty_col, empty_row, empty_col)
+            if(is_dup_conf(grid, configs) == True):
+                swap_cells(grid, empty_row-1, empty_col, empty_row, empty_col)
+            else:
+                cur_conf = get_conf(grid)
+                if(cur_conf == tar_conf):
+                    print("tar_conf")
+                    return
+                empty_row = empty_row-1
+                obj = dfs_params(grid, n, empty_row, empty_col, configs, tar_conf)
+                stack.put(obj)
+        # Right Check
+        if(empty_col != (rows-1)):
+            swap_cells(grid, empty_row, empty_col+1, empty_row, empty_col)
+            if(is_dup_conf(grid, configs) == True):
+                swap_cells(grid, empty_row, empty_col+1, empty_row, empty_col)
+            else:
+                cur_conf = get_conf(grid)
+                if(cur_conf == tar_conf):
+                    print("tar_conf")
+                    return
+                empty_col = empty_col + 1
+                obj = dfs_params(grid, n, empty_row, empty_col, configs, tar_conf)
+                stack.put(obj)
+        # Left check
+        if(empty_col != 0):
+            swap_cells(grid, empty_row, empty_col-1, empty_row, empty_col)
+            if(is_dup_conf(grid, configs) == True):
+                swap_cells(grid, empty_row, empty_col-1, empty_row, empty_col)
+            else:
+                cur_conf = get_conf(grid)
+                if(cur_conf == tar_conf):
+                    print("tar_conf")
+                    return
+                empty_col = empty_col-1
+                obj = dfs_params(grid, n, empty_row, empty_col, configs, tar_conf)
+                stack.put(obj)
 def is_dup_conf(grid, configs):
     prev_len = len(configs)
     cur_conf = get_conf(grid)
@@ -134,5 +161,7 @@ print("empty cell : " + str(empty_row) + ", " + str(empty_col))
 print("tar Conf : " + str(tar_conf))
 dfs(grid, n, empty_row, empty_col, configs, tar_conf)
 print("grid post DFS : " + str(grid))
-print("configs post DFS : ")
-print_set(configs)
+
+end_time = time()
+elapsed_time = end_time-start_time
+print(str(elapsed_time) + " seconds!")
