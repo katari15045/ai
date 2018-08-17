@@ -10,4 +10,5 @@ Iterations : 262
 0 4 3
 7 6 5
 Solvable : No
-Iterations : 
+Iterations :181441
+Duration : 39 Minutes 
