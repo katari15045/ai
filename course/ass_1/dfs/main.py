@@ -7,6 +7,7 @@ start_time = time()
 global grid
 global n, rows
 global tar_conf
+global iterations
 
 class params():
     def __init__(self, grid, empty_row, empty_col):
@@ -15,13 +16,14 @@ class params():
         self.empty_col = empty_col
 
 def dfs():
-    global n, grid, configs, rows, configs
+    global n, grid, configs, rows, configs, iterations
     stack = LifoQueue()
     rows = int(sqrt(n+1))
     empty_row, empty_col = get_empty_cell()
     obj = params(deepcopy(grid), empty_row, empty_col)
     stack.put(obj)
     while(stack.qsize() is not 0):
+        iterations = iterations+1
         obj = stack.get()
         grid = obj.grid
         empty_row = obj.empty_row
@@ -98,7 +100,7 @@ def swap_cells(grid, row_1, col_1, row_2, col_2):
     grid[row_2][col_2] = temp
 
 def get_grid():
-    f = open("input.txt", "r")
+    f = open("../input.txt", "r")
     line = f.readline()
     n = int(line)
     grid = []
@@ -184,7 +186,8 @@ def get_lst():
         row = row+1
     return lst 
 
-global configs, grid, n, rows, tar_conf, empty_row, empty_col
+global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations
+iterations=0
 configs = set()
 grid, n = get_grid()
 rows = int(sqrt(n+1))
@@ -202,6 +205,7 @@ if(cur_conf == tar_conf):
 else:
     print("Puzzle can't be solved!")
 print("Post DFS, Grid : " + str(grid))
+print("iterations : " + str(iterations))
 
 end_time = time()
 elapsed_time = end_time-start_time
