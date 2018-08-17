@@ -32,10 +32,8 @@ def dfs():
             swap_cells(grid_copy, empty_row+1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
-                #print(str(grid) + " | " + "(" + str(empty_row+1) + ", " + str(empty_col) + ")")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    print("a")
                     return
                 obj = params(grid_copy, empty_row+1, empty_col)
                 stack.put(obj)
@@ -47,7 +45,6 @@ def dfs():
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    print("b")
                     return
                 obj = params(grid_copy, empty_row-1, empty_col)
                 stack.put(obj)
@@ -55,12 +52,10 @@ def dfs():
         if(empty_col != (rows-1)):
             grid_copy = deepcopy(grid)
             swap_cells(grid_copy, empty_row, empty_col+1, empty_row, empty_col)
-            print(grid_copy)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    print("c")
                     return
                 obj = params(grid_copy, empty_row, empty_col+1)
                 stack.put(obj)
@@ -72,7 +67,6 @@ def dfs():
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    print("d")
                     return
                 obj = params(grid_copy, empty_row, empty_col-1)
                 stack.put(obj)
