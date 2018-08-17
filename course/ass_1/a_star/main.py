@@ -1,30 +1,33 @@
 from math import sqrt
-from queue import Queue
 from time import time
 from copy import deepcopy
+from collections import deque
 
 start_time = time()
 global grid
 global n, rows
-global tar_conf
+global tar_conf, tar_grid
 global iterations
 
 class params():
-    def __init__(self, grid, empty_row, empty_col):
+    def __init__(self, grid, empty_row, empty_col, cost_so_far):
         self.grid = grid
         self.empty_row = empty_row
         self.empty_col = empty_col
+        self.cost_so_far = cost_so_far
+        self.future_cost = get_future_cost(self)
+        self.total_cost = self.cost_so_far + self.future_cost
 
-def bfs():
+def a_star():
     global n, grid, configs, rows, configs, iterations
-    queue = Queue()
+    leaves = deque()
     rows = int(sqrt(n+1))
     empty_row, empty_col = get_empty_cell()
-    obj = params(deepcopy(grid), empty_row, empty_col)
-    queue.put(obj)
-    while(queue.qsize() is not 0):
+    obj = params(deepcopy(grid), empty_row, empty_col, 0)
+    leaves.append(obj)
+    while(len(leaves) > 0):
         iterations = iterations+1
-        obj = queue.get()
+        obj = get_optimal_leaf(leaves)
         grid = obj.grid
         empty_row = obj.empty_row
         empty_col = obj.empty_col
@@ -37,8 +40,8 @@ def bfs():
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     return
-                obj = params(grid_copy, empty_row+1, empty_col)
-                queue.put(obj)
+                new_obj = params(grid_copy, empty_row+1, empty_col, obj.cost_so_far+1)
+                leaves.append(new_obj)
         # Top Check
         if(empty_row != 0):
             grid_copy = deepcopy(grid)
@@ -48,8 +51,8 @@ def bfs():
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     return
-                obj = params(grid_copy, empty_row-1, empty_col)
-                queue.put(obj)
+                new_obj = params(grid_copy, empty_row-1, empty_col, obj.cost_so_far+1)
+                leaves.append(new_obj)
         # Right Check
         if(empty_col != (rows-1)):
             grid_copy = deepcopy(grid)
@@ -59,8 +62,8 @@ def bfs():
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     return
-                obj = params(grid_copy, empty_row, empty_col+1)
-                queue.put(obj)
+                new_obj = params(grid_copy, empty_row, empty_col+1, obj.cost_so_far+1)
+                leaves.append(new_obj)
         # Left check
         if(empty_col != 0):
             grid_copy = deepcopy(grid)
@@ -70,8 +73,52 @@ def bfs():
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     return
-                obj = params(grid_copy, empty_row, empty_col-1)
-                queue.put(obj)
+                new_obj = params(grid_copy, empty_row, empty_col-1, obj.cost_so_far+1)
+                leaves.append(new_obj)
+
+def get_optimal_leaf(leaves):
+    ind = 0
+    min_cost = leaves[0].total_cost
+    min_cost_ind = 0
+    while(ind < len(leaves)):
+        leaf = leaves[ind]
+        cur_cost = leaf.total_cost
+        if(cur_cost < min_cost):
+            min_cost = cur_cost
+            min_cost_ind = ind
+        ind = ind+1
+    tar_leaf = leaves[min_cost_ind]
+    del leaves[min_cost_ind]
+    return tar_leaf
+
+
+def get_future_cost(obj_params):
+    global rows
+    obj_grid = obj_params.grid
+    row = 0
+    dist = 0
+    while(row < rows):
+        col = 0
+        while(col < rows):
+            cur_dist = manhattan_dist(obj_grid, row, col)
+            dist = dist + cur_dist
+            col = col+1
+        row = row+1
+    return dist
+
+def manhattan_dist(grid, inp_row, inp_col):
+    global tar_grid, rows
+    inp_num = grid[inp_row][inp_col]
+    row = 0
+    while(row < rows):
+        col = 0
+        while(col < rows):
+            cur_num = grid[row][col]
+            if(inp_num == cur_num):
+                return abs(row-inp_row)+abs(col-inp_col)
+            col = col+1
+        row = row+1
+
 def is_dup_conf(grid):
     global configs
     prev_len = len(configs)
@@ -131,10 +178,10 @@ def print_set(s):
         print(element)
 
 def get_tar_conf():
-    global rows
+    global rows, tar_grid
     num = 1
     row = 0
-    grid = []
+    tar_grid = []
     while(row < rows):
         col = 0
         new_row = []
@@ -142,10 +189,10 @@ def get_tar_conf():
             new_row.append(num)
             num = num+1
             col = col+1
-        grid.append(new_row)
+        tar_grid.append(new_row)
         row = row+1
-    grid[rows-1][rows-1] = 0
-    return get_conf(grid)
+    tar_grid[rows-1][rows-1] = 0
+    return get_conf(tar_grid)
 
 def is_solvable():
     lst = get_lst()
@@ -195,8 +242,8 @@ tar_conf = get_tar_conf()
 print("n : " + str(n))
 print("raw grid : " + str(grid))
 is_solvable()
-print("BFS in progress...")
-bfs()
+print("A-Star in progress...")
+a_star()
 cur_conf = get_conf(grid)
 print("cur_conf : " + cur_conf)
 print("tar_conf : " + tar_conf)
@@ -204,7 +251,7 @@ if(cur_conf == tar_conf):
     print("Puzzle has been solved!")
 else:
     print("Puzzle can't be solved!")
-print("Post BFS, Grid : " + str(grid))
+print("Post A-Star, Grid : " + str(grid))
 print("iterations : " + str(iterations))
 
 end_time = time()
