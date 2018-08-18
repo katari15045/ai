@@ -8,6 +8,7 @@ global grid
 global n, rows
 global tar_conf
 global iterations
+global max_q_size
 
 class params():
     def __init__(self, grid, empty_row, empty_col):
@@ -16,7 +17,7 @@ class params():
         self.empty_col = empty_col
 
 def bfs():
-    global n, grid, configs, rows, configs, iterations
+    global n, grid, configs, rows, configs, iterations, max_q_size
     queue = Queue()
     rows = int(sqrt(n+1))
     empty_row, empty_col = get_empty_cell()
@@ -24,6 +25,8 @@ def bfs():
     queue.put(obj)
     while(queue.qsize() is not 0):
         iterations = iterations+1
+        if(queue.qsize() > max_q_size):
+            max_q_size = queue.qsize()
         obj = queue.get()
         grid = obj.grid
         empty_row = obj.empty_row
@@ -186,8 +189,9 @@ def get_lst():
         row = row+1
     return lst 
 
-global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations
+global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_q_size
 iterations=0
+max_q_size = -1
 configs = set()
 grid, n = get_grid()
 rows = int(sqrt(n+1))
@@ -205,8 +209,10 @@ if(cur_conf == tar_conf):
 else:
     print("Puzzle can't be solved!")
 print("Post BFS, Grid : " + str(grid))
-print("iterations : " + str(iterations))
-
 end_time = time()
 elapsed_time = end_time-start_time
+
 print(str(elapsed_time) + " seconds!")
+print("iterations : " + str(iterations))
+print("Max Queue Size : " + str(max_q_size) + " Nodes")
+

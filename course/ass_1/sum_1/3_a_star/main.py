@@ -8,6 +8,7 @@ global grid
 global n, rows
 global tar_conf, tar_grid
 global iterations
+global max_leaves
 
 class params():
     def __init__(self, grid, empty_row, empty_col, cost_so_far):
@@ -19,7 +20,7 @@ class params():
         self.total_cost = self.cost_so_far + self.future_cost
 
 def a_star():
-    global n, grid, configs, rows, configs, iterations
+    global n, grid, configs, rows, configs, iterations, max_leaves
     leaves = deque()
     rows = int(sqrt(n+1))
     empty_row, empty_col = get_empty_cell()
@@ -27,6 +28,8 @@ def a_star():
     leaves.append(obj)
     while(len(leaves) > 0):
         iterations = iterations+1
+        if(len(leaves) > max_leaves):
+            max_leaves = len(leaves)
         obj = get_optimal_leaf(leaves)
         grid = obj.grid
         empty_row = obj.empty_row
@@ -233,8 +236,9 @@ def get_lst():
         row = row+1
     return lst 
 
-global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations
+global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_leaves
 iterations=0
+max_leaves = -1
 configs = set()
 grid, n = get_grid()
 rows = int(sqrt(n+1))
@@ -252,8 +256,10 @@ if(cur_conf == tar_conf):
 else:
     print("Puzzle can't be solved!")
 print("Post A-Star, Grid : " + str(grid))
-print("iterations : " + str(iterations))
-
 end_time = time()
 elapsed_time = end_time-start_time
+
 print(str(elapsed_time) + " seconds!")
+print("iterations : " + str(iterations))
+print("Max Leaves : " + str(max_leaves) + " nodes")
+
