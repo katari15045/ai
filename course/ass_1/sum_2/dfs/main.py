@@ -1,5 +1,5 @@
 from copy import deepcopy
-from queue import Queue
+from queue import LifoQueue
 from time import time
 
 start_time = time()
@@ -7,7 +7,7 @@ start_time = time()
 global rows
 global colors
 global configs
-global q, max_q_size
+global stack, max_stack_size
 global found
 global iterations
 
@@ -18,17 +18,17 @@ class params:
         self.col = col
 
 def bfs():
-    global rows, colors, q, found, iterations, max_q_size
+    global rows, colors, stack, found, iterations, max_stack_size
     grid = []
     init_grid(grid)
     new_grid = handle_cell(grid, 0, 0)
     if(found == True):
         return new_grid
-    while(q.qsize() != 0):
+    while(stack.qsize() != 0):
         iterations = iterations+1
-        if(q.qsize() > max_q_size):
-            max_q_size = q.qsize()
-        obj = q.get()
+        if(stack.qsize() > max_stack_size):
+            max_stack_size = stack.qsize()
+        obj = stack.get()
         row = obj.row
         col = obj.col
         grid = obj.grid
@@ -39,7 +39,7 @@ def bfs():
     return grid
     
 def handle_cell(grid, row, col):
-    global q, rows, colors, found
+    global stack, rows, colors, found
     count = 1
     while(count <= colors):
         new_grid = deepcopy(grid)
@@ -54,7 +54,7 @@ def handle_cell(grid, row, col):
                 found = True
                 return new_grid
             obj = params(new_grid, row, col)
-            q.put(obj)
+            stack.put(obj)
         count = count+1
 
 def no_zero(grid):
@@ -123,19 +123,19 @@ def init_grid(grid):
         grid.append(new_row)
         row = row+1
 
-global rows, colors, configs, q, iterations, max_q_size
+global rows, colors, configs, stack, iterations, max_stack_size
 rows = 3
 colors = 4
 iterations = 0
-max_q_size = 0
+max_stack_size = -1
 configs = set()
-q = Queue()
+stack = LifoQueue()
 found = False
 g = bfs()
 print(g)
 end_time = time()
-time_elapsed = end_time-start_time
+elapsed_time = end_time-start_time
 
-print(str(time_elapsed) + " seconds")
+print(str(elapsed_time) + " seconds!")
 print(str(iterations) + " iterations")
-print("Max Queue Size : " + str(max_q_size) + " nodes")
+print("Max Stack Size : " + str(max_stack_size) + " nodes")
