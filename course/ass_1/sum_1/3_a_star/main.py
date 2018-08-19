@@ -9,22 +9,24 @@ global n, rows
 global tar_conf, tar_grid
 global iterations
 global max_leaves
+global moves
 
 class params():
-    def __init__(self, grid, empty_row, empty_col, cost_so_far):
+    def __init__(self, grid, empty_row, empty_col, cost_so_far, path):
         self.grid = grid
         self.empty_row = empty_row
         self.empty_col = empty_col
         self.cost_so_far = cost_so_far
         self.future_cost = get_future_cost(self)
         self.total_cost = self.cost_so_far + self.future_cost
+        self.path = path
 
 def a_star():
-    global n, grid, configs, rows, configs, iterations, max_leaves
+    global n, grid, configs, rows, configs, iterations, max_leaves, moves
     leaves = deque()
     rows = int(sqrt(n+1))
     empty_row, empty_col = get_empty_cell()
-    obj = params(deepcopy(grid), empty_row, empty_col, 0)
+    obj = params(deepcopy(grid), empty_row, empty_col, 0, [])
     leaves.append(obj)
     while(len(leaves) > 0):
         iterations = iterations+1
@@ -34,49 +36,62 @@ def a_star():
         grid = obj.grid
         empty_row = obj.empty_row
         empty_col = obj.empty_col
+        path = obj.path
         # Bottom Check
         if(empty_row != (rows-1)):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row+1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                new_obj = params(grid_copy, empty_row+1, empty_col, obj.cost_so_far+1)
+                path_copy.append("Down")
+                new_obj = params(grid_copy, empty_row+1, empty_col, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
         # Top Check
         if(empty_row != 0):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row-1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                new_obj = params(grid_copy, empty_row-1, empty_col, obj.cost_so_far+1)
+                path_copy.append("Up")
+                new_obj = params(grid_copy, empty_row-1, empty_col, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
         # Right Check
         if(empty_col != (rows-1)):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row, empty_col+1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                new_obj = params(grid_copy, empty_row, empty_col+1, obj.cost_so_far+1)
+                path_copy.append("Right")
+                new_obj = params(grid_copy, empty_row, empty_col+1, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
         # Left check
         if(empty_col != 0):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row, empty_col-1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                new_obj = params(grid_copy, empty_row, empty_col-1, obj.cost_so_far+1)
+                path_copy.append("Left")
+                new_obj = params(grid_copy, empty_row, empty_col-1, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
 
 def get_optimal_leaf(leaves):
@@ -236,9 +251,10 @@ def get_lst():
         row = row+1
     return lst 
 
-global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_leaves
+global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_leaves, moves
 iterations=0
 max_leaves = -1
+moves = []
 configs = set()
 grid, n = get_grid()
 rows = int(sqrt(n+1))
@@ -259,6 +275,7 @@ print("Post A-Star, Grid : " + str(grid))
 end_time = time()
 elapsed_time = end_time-start_time
 
+print("Moves : " + str(moves))
 print(str(elapsed_time) + " seconds!")
 print("iterations : " + str(iterations))
 print("Max Leaves : " + str(max_leaves) + " nodes")

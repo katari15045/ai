@@ -9,19 +9,21 @@ global n, rows
 global tar_conf
 global iterations
 global max_stack_size
+global moves
 
 class params():
-    def __init__(self, grid, empty_row, empty_col):
+    def __init__(self, grid, empty_row, empty_col, path):
         self.grid = grid
         self.empty_row = empty_row
         self.empty_col = empty_col
+        self.path = path
 
 def dfs():
-    global n, grid, configs, rows, configs, iterations, max_stack_size
+    global n, grid, configs, rows, configs, iterations, max_stack_size, moves
     stack = LifoQueue()
     rows = int(sqrt(n+1))
     empty_row, empty_col = get_empty_cell()
-    obj = params(deepcopy(grid), empty_row, empty_col)
+    obj = params(deepcopy(grid), empty_row, empty_col, [])
     stack.put(obj)
     while(stack.qsize() is not 0):
         iterations = iterations+1
@@ -31,49 +33,62 @@ def dfs():
         grid = obj.grid
         empty_row = obj.empty_row
         empty_col = obj.empty_col
+        path = obj.path
         # Bottom Check
         if(empty_row != (rows-1)):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row+1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                obj = params(grid_copy, empty_row+1, empty_col)
+                path_copy.append("Down")
+                obj = params(grid_copy, empty_row+1, empty_col, path_copy)
                 stack.put(obj)
         # Top Check
         if(empty_row != 0):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row-1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                obj = params(grid_copy, empty_row-1, empty_col)
+                path_copy.append("Top")
+                obj = params(grid_copy, empty_row-1, empty_col, path_copy)
                 stack.put(obj)
         # Right Check
         if(empty_col != (rows-1)):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row, empty_col+1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                obj = params(grid_copy, empty_row, empty_col+1)
+                path_copy.append("Right")
+                obj = params(grid_copy, empty_row, empty_col+1, path_copy)
                 stack.put(obj)
         # Left check
         if(empty_col != 0):
             grid_copy = deepcopy(grid)
+            path_copy = deepcopy(path)
             swap_cells(grid_copy, empty_row, empty_col-1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
                 if(cur_conf == tar_conf):
                     grid = grid_copy
+                    moves = path_copy
                     return
-                obj = params(grid_copy, empty_row, empty_col-1)
+                path_copy.append("Left")
+                obj = params(grid_copy, empty_row, empty_col-1, path_copy)
                 stack.put(obj)
 def is_dup_conf(grid):
     global configs
@@ -189,9 +204,10 @@ def get_lst():
         row = row+1
     return lst 
 
-global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_stack_size
+global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_stack_size, moves
 iterations=0
 max_stack_size = -1
+moves = []
 configs = set()
 grid, n = get_grid()
 rows = int(sqrt(n+1))
@@ -212,6 +228,7 @@ print("Post DFS, Grid : " + str(grid))
 end_time = time()
 elapsed_time = end_time-start_time
 
+print("Moves : " + str(moves))
 print(str(elapsed_time) + " seconds!")
 print("Iterations : " + str(iterations))
 print("Max Stack Size : " + str(max_stack_size) + " nodes")
