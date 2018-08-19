@@ -45,11 +45,11 @@ def a_star():
             swap_cells(grid_copy, empty_row+1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Down")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     moves = path_copy
                     return
-                path_copy.append("Down")
                 new_obj = params(grid_copy, empty_row+1, empty_col, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
         # Top Check
@@ -59,11 +59,11 @@ def a_star():
             swap_cells(grid_copy, empty_row-1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Up")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     moves = path_copy
                     return
-                path_copy.append("Top")
                 new_obj = params(grid_copy, empty_row-1, empty_col, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
         # Right Check
@@ -73,11 +73,11 @@ def a_star():
             swap_cells(grid_copy, empty_row, empty_col+1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Right")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     moves = path_copy
                     return
-                path_copy.append("Right")
                 new_obj = params(grid_copy, empty_row, empty_col+1, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
         # Left check
@@ -87,11 +87,11 @@ def a_star():
             swap_cells(grid_copy, empty_row, empty_col-1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Left")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
                     moves = path_copy
                     return
-                path_copy.append("Left")
                 new_obj = params(grid_copy, empty_row, empty_col-1, obj.cost_so_far+1, path_copy)
                 leaves.append(new_obj)
 

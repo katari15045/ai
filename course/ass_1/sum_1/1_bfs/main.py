@@ -41,11 +41,11 @@ def bfs():
             swap_cells(grid_copy, empty_row+1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Down")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    moves = path
+                    moves = path_copy
                     return
-                path_copy.append("Down")
                 obj = params(grid_copy, empty_row+1, empty_col, path_copy)
                 queue.put(obj)
         # Top Check
@@ -55,11 +55,11 @@ def bfs():
             swap_cells(grid_copy, empty_row-1, empty_col, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Top")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    moves = path
+                    moves = path_copy
                     return
-                path_copy.append("Up")
                 obj = params(grid_copy, empty_row-1, empty_col, path_copy)
                 queue.put(obj)
         # Right Check
@@ -69,11 +69,11 @@ def bfs():
             swap_cells(grid_copy, empty_row, empty_col+1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Right")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    moves = path
+                    moves = path_copy
                     return
-                path_copy.append("Right")
                 obj = params(grid_copy, empty_row, empty_col+1, path_copy)
                 queue.put(obj)
         # Left check
@@ -83,11 +83,11 @@ def bfs():
             swap_cells(grid_copy, empty_row, empty_col-1, empty_row, empty_col)
             if(is_dup_conf(grid_copy) == False):
                 cur_conf = get_conf(grid_copy)
+                path_copy.append("Left")
                 if(cur_conf == tar_conf):
                     grid = grid_copy
-                    moves = path
+                    moves = path_copy
                     return
-                path_copy.append("Left")
                 obj = params(grid_copy, empty_row, empty_col-1, path_copy)
                 queue.put(obj)
 def is_dup_conf(grid):
