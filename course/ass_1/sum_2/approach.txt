@@ -1,0 +1,17 @@
+BFS
+---
+
+1. Given a ramdom_grid, find the frequency of all the colors (1 to k) --- freq_lst
+2. Make an empty grid, all 0s, n rows, n cols --- grid
+3. Put grid[0][0] in the queue
+4. while(queue is not empty)
+	node = dequeue
+	given a cell, put all "available colors (taken from freq_lst)" in the cell --- modified_grid
+	update the freq_list according the color you've choosen in the prev step --- modified_freq_lst
+	if(modified_grid is valid)
+		put modified_grid, next_cell, modified_freq_lst - wrapped in an object, in the queue
+	
+
+DFS
+---
+Similar to BFS; instead of queue, use stack.	
