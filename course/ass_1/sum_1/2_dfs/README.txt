@@ -3,7 +3,7 @@
 0 4 3
 7 6 5
 Solvable : yes
-Time : 4.871293067932129 seconds!
+Time : 2578.894870042801 seconds! (43 minutes)
 Iterations : 39007
 Max Stack Size : 26984 nodes
 
