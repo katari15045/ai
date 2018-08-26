@@ -271,7 +271,7 @@ def get_lst():
     return lst 
 
 global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_nodes, max_deque_size, moves
-max_nodes = 180
+max_nodes = 30
 iterations=0
 max_deque_size = -1
 moves = []

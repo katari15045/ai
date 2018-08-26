@@ -32,3 +32,13 @@ Max Queue Size : 227 Nodes
 Time : 0.01618480682373047 seconds!
 iterations : 14
 Max Queue Size : 13 Nodes
+
+8
+8 1 3
+4 0 2
+7 6 5
+Time : 0.6598105430603027 seconds!
+iterations : 3177
+Max Queue Size : 1948 Nodes
+
+

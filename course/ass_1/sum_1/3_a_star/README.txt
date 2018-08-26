@@ -34,3 +34,12 @@ Time : 0.0077550411224365234 seconds!
 iterations : 14
 Max Leaves : 13 nodes
 
+8
+8 1 3
+4 0 2
+7 6 5
+Time : 1.87434720993042 seconds!
+iterations : 3177
+Max Leaves : 1948 nodes
+
+
