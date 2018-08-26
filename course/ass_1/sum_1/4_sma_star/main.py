@@ -271,6 +271,7 @@ def get_lst():
     return lst 
 
 global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_nodes, max_deque_size, moves
+# Max_nodes_in_memory <= Max_nodes + 4 (Due to Left, Right, Up, Down Operations)
 max_nodes = 50
 iterations=0
 max_deque_size = -1
@@ -296,6 +297,7 @@ end_time = time()
 elapsed_time = end_time-start_time
 
 print("Moves : " + str(moves))
+print("Threshold on nodes : " + str(max_nodes) + " (upto +4)")
 print("Total Moves : " + str(len(moves)))
 print(str(elapsed_time) + " seconds!")
 print("iterations : " + str(iterations))
