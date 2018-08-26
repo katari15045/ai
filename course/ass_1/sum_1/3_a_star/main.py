@@ -276,6 +276,7 @@ end_time = time()
 elapsed_time = end_time-start_time
 
 print("Moves : " + str(moves))
+print("Total Moves : " + str(len(moves)))
 print(str(elapsed_time) + " seconds!")
 print("iterations : " + str(iterations))
 print("Max Leaves : " + str(max_leaves) + " nodes")

@@ -271,7 +271,7 @@ def get_lst():
     return lst 
 
 global configs, grid, n, rows, tar_conf, empty_row, empty_col, iterations, max_nodes, max_deque_size, moves
-max_nodes = 30
+max_nodes = 50
 iterations=0
 max_deque_size = -1
 moves = []
@@ -296,6 +296,7 @@ end_time = time()
 elapsed_time = end_time-start_time
 
 print("Moves : " + str(moves))
+print("Total Moves : " + str(len(moves)))
 print(str(elapsed_time) + " seconds!")
 print("iterations : " + str(iterations))
 print("Max Deque Size : " + str(max_deque_size) + " nodes")
