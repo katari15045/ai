@@ -16,3 +16,11 @@ Time : 26.057126760482788 seconds!
 iterations : 181441
 Max Queue Size : 25136 Nodes
 
+8
+1 6 2
+5 7 3
+0 4 8
+Solvable : Yes
+Time : 0.11268949508666992 seconds!
+iterations : 354
+Max Queue Size : 227 Nodes
