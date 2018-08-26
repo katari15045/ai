@@ -24,4 +24,11 @@ Time : 0.12041020393371582 seconds!
 iterations : 354
 Max Deque Size : 181 nodes
 
+8
+0 1 3
+4 2 5
+7 8 6
+Time : 0.009186506271362305 seconds!
+iterations : 14
+Max Deque Size : 13 nodes
 

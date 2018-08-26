@@ -24,3 +24,11 @@ Solvable : Yes
 Time : 0.11268949508666992 seconds!
 iterations : 354
 Max Queue Size : 227 Nodes
+
+8
+0 1 3
+4 2 5
+7 8 6
+Time : 0.01618480682373047 seconds!
+iterations : 14
+Max Queue Size : 13 Nodes
