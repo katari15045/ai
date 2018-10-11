@@ -1,4 +1,6 @@
-from node import node
+import sys
+from graph import Graph
+from node import Node
 
 '''
 Assumptions:
@@ -7,10 +9,12 @@ Assumptions:
 	Grid: dim x dim matrix
 '''
 
-class main:
-	grid = [['X', 'O', 'X'], ['O', 'X', 'O'], ['O', 'X', 'X']]
-	node_ = node(grid)
-	is_complete_, player = node_.is_complete()
-	print(str(is_complete_) + " : " + player)
-
-main()
+class Main:
+	def main():
+		grid = [['X', 'O', 'X'], ['O', 'X', 'O'], ['O', 'X', 'X']]
+		root = Node(grid)
+		is_complete_, player = root.is_complete()
+		print(str(is_complete_) + " : " + player)
+		Graph.init(root)
+		Graph.print()
+Main.main()
