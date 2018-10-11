@@ -1,4 +1,4 @@
-from constant import Constant
+from constants import Constants
 
 class Node:
 
@@ -13,60 +13,60 @@ class Node:
 
 	def is_hor_line_present(self):
 		row = 0
-		while(row < Constant.dim):
+		while(row < Constants.dim):
 			col = 0
 			finished = False
-			while(col < Constant.dim):
+			while(col < Constants.dim):
 				if(col == 0):
 					prev = self.grid[row][col]
 				else:
 					if(self.grid[row][col] != prev):
 						break
 					prev = self.grid[row][col]
-				if(col == (Constant.dim-1)):
+				if(col == (Constants.dim-1)):
 					finished = True
 					break
 				col = col+1
 			if(finished == True):
 				return finished, prev
 			row = row+1
-		return finished, Constant.no_player
+		return finished, Constants.no_player
 
 	def is_ver_line_present(self):
 		col = 0
-		while(col < Constant.dim):
+		while(col < Constants.dim):
 			row = 0
 			finished = False
-			while(row < Constant.dim):
+			while(row < Constants.dim):
 				if(row == 0):
 					prev = self.grid[row][col]
 				else:
 					if(self.grid[row][col] != prev):
 						break
 					prev = self.grid[row][col]
-				if(row == (Constant.dim-1)):
+				if(row == (Constants.dim-1)):
 					finished = True
 				row = row+1
 			if(finished == True):
 				return finished, prev
 			col = col+1
-		return finished, Constant.no_player
+		return finished, Constants.no_player
 
 	def is_cross_line_present(self):
 		ind = 0
-		while(ind < Constant.dim):
+		while(ind < Constants.dim):
 			if(ind == 0):
 				prev = self.grid[ind][ind]
 			else:
 				if(self.grid[ind][ind] != prev):
 					break
 				prev = self.grid[ind][ind]
-			if(ind == (Constant.dim-1)):
+			if(ind == (Constants.dim-1)):
 				return True, prev
 			ind = ind+1
 		row = 0
-		col = Constant.dim-1
-		while(row < Constant.dim):
+		col = Constants.dim-1
+		while(row < Constants.dim):
 			if(row == 0):
 				prev = self.grid[row][col]
 			else:
@@ -77,7 +77,7 @@ class Node:
 				return True, prev
 			row = row+1
 			col = col-1
-		return False, Constant.no_player
+		return False, Constants.no_player
 
 	def is_complete(self):
 		is_present, player = self.is_hor_line_present()
@@ -89,4 +89,4 @@ class Node:
 		is_present, player = self.is_cross_line_present()
 		if( is_present == True ):
 			return is_present, player
-		return False, Constant.no_player
+		return False, Constants.no_player
