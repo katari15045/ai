@@ -1,6 +1,7 @@
 import sys
 from graph import Graph
 from node import Node
+from constants import Constants
 
 '''
 Assumptions:
@@ -11,11 +12,7 @@ Assumptions:
 
 class Minimax:
 	def tic_tac_toe():
-		grid = [['X', 'O', 'X'], ['O', 'X', 'O'], ['O', 'X', 'X']]
-		root = Node(grid)
-		is_complete_, player = root.is_complete()
-		print(str(is_complete_) + " : " + player)
-		Graph.init(root)
+		Graph.init()
 		Graph.print()
 
 Minimax.tic_tac_toe()
