@@ -9,12 +9,13 @@ Assumptions:
 	Grid: dim x dim matrix
 '''
 
-class Main:
-	def main():
+class Minimax:
+	def tic_tac_toe():
 		grid = [['X', 'O', 'X'], ['O', 'X', 'O'], ['O', 'X', 'X']]
 		root = Node(grid)
 		is_complete_, player = root.is_complete()
 		print(str(is_complete_) + " : " + player)
 		Graph.init(root)
 		Graph.print()
-Main.main()
+
+Minimax.tic_tac_toe()
