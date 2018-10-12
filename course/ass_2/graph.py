@@ -75,15 +75,19 @@ class Graph:
 
 	# BFS
 	def print():
+		configs_2 = dict()
 		count = 0
 		print("Graph: ")
 		q = Queue()
 		q.put(Graph.root)
 		while(q.qsize() != 0):
 			cur_node = q.get()
-			print(str(count) + " / " + str(len(Graph.configs)))
-			count = count+1
-			cur_node.print()
-			for child in cur_node.children:
-				q.put(child)
+			cur_config = str(cur_node.grid)
+			if(configs_2.get(cur_config) == None):
+				configs_2[cur_config] = True
+				print(str(count) + " / " + str(len(Graph.configs)))
+				count = count+1
+				cur_node.print()
+				for child in cur_node.children:
+					q.put(child)
 		print("Unique configs: " + str(len(Graph.configs)))
