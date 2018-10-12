@@ -90,16 +90,26 @@ class Node:
 	def is_complete(self):
 		is_present, player = self.is_hor_line_present()
 		if( is_present == True ):
-			return is_present, player
+			self.update_cost(player)
+			return True, player
 		is_present, player = self.is_ver_line_present()
 		if( is_present == True ):
-			return is_present, player
+			self.update_cost(player)
+			return True, player
 		is_present, player = self.is_cross_line_present()
 		if( is_present == True ):
-			return is_present, player
+			self.update_cost(player)
+			return True, player
 		if( self.all_occupied() == True ):
+			self.update_cost(player)
 			return True, Constants.tie
 		return False, Constants.in_progress
+
+	def update_cost(self, player):
+		if(player == 'X'):
+			self.cost = 1
+		elif(player == 'O'):
+			self.cost = -1
 
 	def print(self):
 		print("\n", end="")

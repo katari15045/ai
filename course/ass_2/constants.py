@@ -4,4 +4,4 @@ class Constants:
 	unoccupied = '.'
 	tie = 'T'
 	in_progress = 'P'
-	dim = 3
+	dim = 2
