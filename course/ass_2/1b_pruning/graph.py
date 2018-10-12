@@ -17,11 +17,15 @@ class Graph:
 		q.put(Graph.root)
 		while(q.qsize() != 0):
 			cur_node = q.get()
+	#		Graph.is_pruning_possible(cur_node)
 			Graph.node_count = Graph.node_count+1
 			is_end, player = Node.is_complete(cur_node)
 			if(is_end == False):
 				nodes_to_expand = Graph.get_next_nodes_to_expand(cur_node)
 				Graph.add_nodes_to_expand_to_q(nodes_to_expand, q)
+
+	#def is_pruning_possible(base_node):
+
 
 	def add_nodes_to_expand_to_q(nodes_to_expand, q):
 		for node_ in nodes_to_expand:

@@ -128,13 +128,19 @@ class Node:
 			return
 		parent = base_node.parent
 		if(parent.user_turn == True):
-			# Tries to maximize the cost; constraint = 'at least'
-			parent.at_least_valid = True
-			parent.at_least = base_node.cost
+			# Tries to maximize the cost; constraint = 'at least'; update only if new cost is more than the constraint
+			if(parent.at_least_valid == True and base_node.cost > parent.at_least):
+				parent.at_least = base_node.cost
+			if(parent.at_least_valid == False):
+				parent.at_least_valid = True
+				parent.at_least = base_node.cost
 		else:
-			# Tries to minimize the cost; constraint = 'at most'
-			parent.at_most_valid = True
-			parent.at_most = base_node.cost
+			# Tries to minimize the cost; constraint = 'at most'; update only if new cost is less than the constraint
+			if(parent.at_most_valid == True and base_node.cost < parent.at_most):
+				parent.at_most = base_node.cost
+			if(parent.at_most_valid == False):
+				parent.at_most_valid = True
+				parent.at_most = base_node.cost
 
 	def update_ancestors_cost(self):
 		if(self.parent == None):
