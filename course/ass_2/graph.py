@@ -7,9 +7,10 @@ from copy import deepcopy
 class Graph:
 	root = None
 	node_count = 0
+	configs = None
 
 	def init():
-		# init Root Node
+		Graph.configs = dict()
 		empty_grid = Graph.get_empty_grid()
 		Graph.root = Node(empty_grid)
 		q = Queue()
@@ -19,19 +20,15 @@ class Graph:
 			Graph.node_count = Graph.node_count+1
 			is_end, player = cur_node.is_complete()
 			if(is_end == False):
-				next_moves = Graph.get_next_moves(cur_node)
-				cur_node.children = next_moves
-				Graph.add_children_to_q(cur_node.children, q)
+				nodes_to_expand = Graph.get_next_nodes_to_expand(cur_node)
+				Graph.add_nodes_to_expand_to_q(nodes_to_expand, q)
 
-	def add_children_to_q(children, q):
-		for child in children:
-			repeating, node_ = Graph.is_repeating(child.grid)
-			# Don't expand if it is already being expanded
-			if(repeating == False):
-				q.put(child)
+	def add_nodes_to_expand_to_q(nodes_to_expand, q):
+		for node_ in nodes_to_expand:
+			q.put(node_)
 
-	def get_next_moves(node):
-		moves = []
+	def get_next_nodes_to_expand(node):
+		nodes_to_expand = []
 		row = 0
 		while(row < Constants.dim):
 			col = 0
@@ -41,13 +38,25 @@ class Graph:
 					grid_copy_2 = deepcopy(node.grid)
 					grid_copy_1[row][col] = Constants.user
 					grid_copy_2[row][col] = Constants.computer
-					new_node_1 = Node(grid_copy_1)
-					new_node_2 = Node(grid_copy_2)
-					moves.append(new_node_1)
-					moves.append(new_node_2)
+					is_present_, node_ = Graph.is_present(grid_copy_1)
+					if( is_present_ == True ):
+						new_node_1 = node_
+					else:
+						new_node_1 = Node(grid_copy_1)
+						Graph.configs[str(grid_copy_1)] = new_node_1
+						nodes_to_expand.append(new_node_1)
+					is_present_, node_ = Graph.is_present(grid_copy_2)
+					if( is_present_ == True ):
+						new_node_2 = node_
+					else:
+						new_node_2 = Node(grid_copy_2)
+						Graph.configs[str(grid_copy_2)] = new_node_2
+						nodes_to_expand.append(new_node_2)
+					node.children.append(new_node_1)
+					node.children.append(new_node_2)
 				col = col+1
 			row = row+1
-		return moves
+		return nodes_to_expand
 
 	def get_empty_grid():
 		grid = []
@@ -62,19 +71,10 @@ class Graph:
 			row = row+1
 		return grid
 
-	def is_repeating(tar_grid):
-		# True, if it is present at least twice
-		count = 0
-		q = Queue()
-		q.put(Graph.root)
-		while(q.qsize() != 0):
-			cur_node = q.get()
-			if(cur_node.grid == tar_grid):
-				count = count+1
-				if(count == 2):
-					return True, cur_node
-			for child in cur_node.children:
-				q.put(child)
+	def is_present(tar_grid):
+		is_present_ = Graph.configs.get(str(tar_grid))
+		if( is_present_ != None ):
+			return True, is_present_
 		return False, None
 
 	# BFS
