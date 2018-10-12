@@ -4,10 +4,11 @@ class Node:
 
 	def __init__(self, grid, parent, user_turn):
 		self.grid = grid
-		self.cost = 0
+		self.cost = -2
 		self.parent = parent
 		self.children = []
 		self.user_turn = user_turn
+		self.children_updated = 0
 
 	def is_hor_line_present(self):
 		row = 0
@@ -111,6 +112,35 @@ class Node:
 			self.cost = 1
 		elif(player == 'O'):
 			self.cost = -1
+		self.update_ancestors_cost()
+
+
+	def update_ancestors_cost(self):
+		child = self
+		# Update Ancestors' cost
+		while(True):
+			if(child.parent == None):
+				return
+			child.parent.children_updated = child.parent.children_updated+1
+			if(child.parent.children_updated == len(child.parent.children)):
+				iter_1 = True
+				for child in child.parent.children:
+					if(iter_1 == True):
+						iter_1 = False
+						min_ = child.cost
+						max_ = child.cost
+					else:
+						min_ = min(min_, child.cost)
+						max_ = min(max_, child.cost)
+				# User maximizes the cost
+				if(child.parent.user_turn == True):
+					child.parent.cost = max_
+				else:
+					child.parent.cost = min_
+				child = child.parent
+			else:
+				break
+
 
 	def print(self):
 		print("\n", end="")
