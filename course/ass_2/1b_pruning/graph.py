@@ -17,14 +17,42 @@ class Graph:
 		q.put(Graph.root)
 		while(q.qsize() != 0):
 			cur_node = q.get()
-	#		Graph.is_pruning_possible(cur_node)
-			Graph.node_count = Graph.node_count+1
-			is_end, player = Node.is_complete(cur_node)
-			if(is_end == False):
-				nodes_to_expand = Graph.get_next_nodes_to_expand(cur_node)
-				Graph.add_nodes_to_expand_to_q(nodes_to_expand, q)
+			if( Graph.is_pruning_possible(cur_node) == False ):
+				Graph.node_count = Graph.node_count+1
+				is_end, player = Node.is_complete(cur_node)
+				if(is_end == False):
+					nodes_to_expand = Graph.get_next_nodes_to_expand(cur_node)
+					Graph.add_nodes_to_expand_to_q(nodes_to_expand, q)
+		# Remove Root Node
+		Graph.node_count = Graph.node_count-1
 
-	#def is_pruning_possible(base_node):
+	def is_pruning_possible(base_node):
+		parent = base_node.parent
+		if(parent == None):
+			return False
+		at_least = 0
+		at_most = 0
+		if(parent.at_least_valid == True or parent.at_most_valid == True):
+			if(parent.at_least_valid == True):
+				at_least = parent.at_least
+			if(parent.at_most_valid == True):
+				at_most = parent.at_most
+		else:
+			return False
+		cur_node = parent.parent
+		while(True):
+			if(cur_node == None):
+				return False
+			if(cur_node.at_least_valid == True or cur_node.at_most_valid == True):
+				if(cur_node.at_least_valid == True):
+					at_least = cur_node.at_least
+				if(cur_node.at_most_valid == True):
+					at_most = cur_node.at_most
+				if(at_most < at_least):
+					return True
+				return False
+			cur_node = cur_node.parent
+		return False
 
 
 	def add_nodes_to_expand_to_q(nodes_to_expand, q):

@@ -152,7 +152,7 @@ class Node:
 
 	def print(self):
 		print("\n", end="")
-		node.print_grid(self.grid)
+		Node.print_grid(self.grid)
 		if(self.user_turn == True):
 			print("Next Turn: " + str(Constants.user))
 		else:

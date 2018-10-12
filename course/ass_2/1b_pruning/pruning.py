@@ -15,9 +15,12 @@ class Pruning:
 	def tic_tac_toe():
 		print("Starting...")
 		Graph.init()
+		print("Unique configs traversed: " + str(len(Graph.configs)))
+		print("Nodes in Graph: " + str(Graph.node_count))
 		print("1-indexing")
 		node = Graph.root
 		Node.print_grid(node.grid)
+		#Graph.print()
 		while(True):
 			row, col = Pruning.take_input()
 			print("User: ")
@@ -31,8 +34,7 @@ class Pruning:
 			Node.print_grid(node.grid)
 			if(Pruning.is_game_over(node) == True):
 				return
-		#Graph.print()
-		#print("Nodes: " + str(len(Graph.configs)))
+		
 
 	def is_game_over(node):
 		complete, champ = Node.is_complete(node)
