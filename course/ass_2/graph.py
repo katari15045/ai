@@ -83,4 +83,4 @@ class Graph:
 			cur_node.print()
 			for child in cur_node.children:
 				q.put(child)
-		print("Nodes: " + str(Graph.node_count))
+		print("Unique configs: " + str(len(Graph.configs)))

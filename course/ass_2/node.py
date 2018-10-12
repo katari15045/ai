@@ -109,26 +109,26 @@ class Node:
 		return False, Constants.in_progress
 
 	def update_cost(self, player):
-		if(player == 'X'):
+		if(player == Constants.user):
 			self.cost = 1
-		elif(player == 'O'):
+		elif(player == Constants.computer):
 			self.cost = -1
-		self.update_ancestors_cost()
+		self.update_ancestors_cost(player)
 
 
-	def update_ancestors_cost(self):
+	def update_ancestors_cost(self, player):
 		child = self
-		# Update Ancestors' cost
 		while(True):
 			if(child.parent == None):
 				return
 			child.parent.children_updated = child.parent.children_updated+1
+			for other_parent in child.other_parents:
+				other_parent.children_updated = other_parent.children_updated+1
 			if(child.parent.children_updated == len(child.parent.children)):
-				self.update_ancestor_cost(child.parent)
-				print("outer, ", end="")
+				child.parent.update_cost(player)
 				for other_parent in child.other_parents:
-					print("inner, ", end="")
-					self.update_ancestor_cost(other_parent)
+					if(other_parent.children_updated == len(other_parent.children)):
+						other_parent.update_cost(player)
 			else:
 				break
 			child = child.parent
@@ -162,6 +162,8 @@ class Node:
 			print("Parent's cost: " + str(self.parent.cost))
 		else:
 			print("Parent: None")
+		print("children updated: " + str(self.children_updated))
+		print("Total children: " + str(len(self.children)))
 
 	def print_grid(self):
 		row = 0
