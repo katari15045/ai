@@ -104,7 +104,7 @@ class Node:
 			self.update_cost(player)
 			return True, player
 		if( self.all_occupied() == True ):
-			self.update_cost(player)
+			self.update_cost(Constants.tie)
 			return True, Constants.tie
 		return False, Constants.in_progress
 
@@ -113,6 +113,8 @@ class Node:
 			self.cost = 1
 		elif(player == Constants.computer):
 			self.cost = -1
+		elif(player == Constants.tie):
+			self.cost = 0
 		self.update_ancestors_cost(player)
 
 
