@@ -18,7 +18,7 @@ class Graph:
 		while(q.qsize() != 0):
 			cur_node = q.get()
 			Graph.node_count = Graph.node_count+1
-			is_end, player = cur_node.is_complete()
+			is_end, player = Node.is_complete(cur_node)
 			if(is_end == False):
 				nodes_to_expand = Graph.get_next_nodes_to_expand(cur_node)
 				Graph.add_nodes_to_expand_to_q(nodes_to_expand, q)
@@ -93,3 +93,20 @@ class Graph:
 				for child in cur_node.children:
 					q.put(child)
 		print("Unique configs: " + str(len(Graph.configs)))
+
+	def get_child(node, grid):
+		for child in node.children:
+			if(child.grid == grid):
+				return child
+
+	def next_move(node):
+		for child in node.children:
+			if(child.cost == Constants.computer_optimal_cost):
+				return child
+		for child in node.children:
+			if(child.cost == Constants.tie_cost):
+				return child
+		for child in node.children:
+			if(child.cost == Constants.user_optimal_cost):
+				return child
+		

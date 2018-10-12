@@ -1,4 +1,5 @@
 from constants import Constants
+from copy import deepcopy
 
 class Node:
 
@@ -90,31 +91,31 @@ class Node:
 			row = row+1
 		return True
 
-	def is_complete(self):
-		is_present, player = self.is_hor_line_present()
+	def is_complete(node):
+		is_present, player = node.is_hor_line_present()
 		if( is_present == True ):
-			self.update_cost(player)
+			node.update_cost(player)
 			return True, player
-		is_present, player = self.is_ver_line_present()
+		is_present, player = node.is_ver_line_present()
 		if( is_present == True ):
-			self.update_cost(player)
+			node.update_cost(player)
 			return True, player
-		is_present, player = self.is_cross_line_present()
+		is_present, player = node.is_cross_line_present()
 		if( is_present == True ):
-			self.update_cost(player)
+			node.update_cost(player)
 			return True, player
-		if( self.all_occupied() == True ):
-			self.update_cost(Constants.tie)
+		if( node.all_occupied() == True ):
+			node.update_cost(Constants.tie)
 			return True, Constants.tie
 		return False, Constants.in_progress
 
 	def update_cost(self, player):
 		if(player == Constants.user):
-			self.cost = 1
+			self.cost = Constants.user_optimal_cost
 		elif(player == Constants.computer):
-			self.cost = -1
+			self.cost = Constants.computer_optimal_cost
 		elif(player == Constants.tie):
-			self.cost = 0
+			self.cost = Constants.tie_cost
 		self.update_ancestors_cost()
 
 
@@ -151,7 +152,7 @@ class Node:
 
 	def print(self):
 		print("\n", end="")
-		self.print_grid()
+		node.print_grid(self.grid)
 		if(self.user_turn == True):
 			print("Next Turn: " + str(Constants.user))
 		else:
@@ -164,12 +165,19 @@ class Node:
 		print("children updated: " + str(self.children_updated))
 		print("Total children: " + str(len(self.children)))
 
-	def print_grid(self):
+	def print_grid(grid):
 		row = 0
 		while(row < Constants.dim):
 			col = 0
 			while(col < Constants.dim):
-				print(str(self.grid[row][col]), end=" ")
+				print(str(grid[row][col]), end=" ")
 				col = col+1
 			print("\n", end="")
 			row = row+1
+
+	def get_grid(grid, row, col):
+		row = row-1
+		col = col-1
+		grid_copy = deepcopy(grid)
+		grid_copy[row][col] = Constants.user
+		return grid_copy
