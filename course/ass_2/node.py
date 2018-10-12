@@ -9,6 +9,7 @@ class Node:
 		self.children = []
 		self.user_turn = user_turn
 		self.children_updated = 0
+		self.other_parents = []
 
 	def is_hor_line_present(self):
 		row = 0
@@ -123,23 +124,30 @@ class Node:
 				return
 			child.parent.children_updated = child.parent.children_updated+1
 			if(child.parent.children_updated == len(child.parent.children)):
-				iter_1 = True
-				for child in child.parent.children:
-					if(iter_1 == True):
-						iter_1 = False
-						min_ = child.cost
-						max_ = child.cost
-					else:
-						min_ = min(min_, child.cost)
-						max_ = min(max_, child.cost)
-				# User maximizes the cost
-				if(child.parent.user_turn == True):
-					child.parent.cost = max_
-				else:
-					child.parent.cost = min_
-				child = child.parent
+				self.update_ancestor_cost(child.parent)
+				print("outer, ", end="")
+				for other_parent in child.other_parents:
+					print("inner, ", end="")
+					self.update_ancestor_cost(other_parent)
 			else:
 				break
+			child = child.parent
+
+	def update_ancestor_cost(self, parent):
+		iter_1 = True
+		for child in parent.children:
+			if(iter_1 == True):
+				iter_1 = False
+				min_ = child.cost
+				max_ = child.cost
+			else:
+				min_ = min(min_, child.cost)
+				max_ = min(max_, child.cost)
+		# User maximizes the cost
+		if(parent.user_turn == True):
+			parent.cost = max_
+		else:
+			parent.cost = min_
 
 
 	def print(self):

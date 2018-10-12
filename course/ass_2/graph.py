@@ -44,6 +44,7 @@ class Graph:
 					is_present_, node_ = Graph.is_present(grid_copy)
 					if( is_present_ == True ):
 						new_node = node_
+						node_.other_parents.append(parent)
 					else:
 						new_node = Node(grid_copy, parent, is_next_turn_user)
 						Graph.configs[str(grid_copy)] = new_node
