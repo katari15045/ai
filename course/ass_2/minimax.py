@@ -15,6 +15,7 @@ class Minimax:
 	def tic_tac_toe():
 		print("Starting...")
 		Graph.init()
+		print("1-indexing")
 		node = Graph.root
 		Node.print_grid(node.grid)
 		while(True):

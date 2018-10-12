@@ -142,7 +142,7 @@ class Node:
 				max_ = child.cost
 			else:
 				min_ = min(min_, child.cost)
-				max_ = min(max_, child.cost)
+				max_ = max(max_, child.cost)
 		# User maximizes the cost
 		if(parent.user_turn == True):
 			parent.cost = max_
