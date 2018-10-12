@@ -2,14 +2,11 @@ from constants import Constants
 
 class Node:
 
-	def __init__(self, grid):
+	def __init__(self, grid, parent):
 		self.grid = grid
 		self.cost = 0
-		self.parent = None
+		self.parent = parent
 		self.children = []
-
-	def __str__(self):
-		return str(self.cost) + "\n" + str(self.grid) + "\n-------------"
 
 	def is_hor_line_present(self):
 		row = 0
@@ -103,3 +100,22 @@ class Node:
 		if( self.all_occupied() == True ):
 			return True, Constants.tie
 		return False, Constants.in_progress
+
+	def print(self):
+		print("\n", end="")
+		self.print_grid()
+		print("Cost: " + str(self.cost))
+		if(self.parent != None):
+			print("Parent's cost: " + str(self.parent.cost))
+		else:
+			print("Parent: None")
+
+	def print_grid(self):
+		row = 0
+		while(row < Constants.dim):
+			col = 0
+			while(col < Constants.dim):
+				print(str(self.grid[row][col]), end=" ")
+				col = col+1
+			print("\n", end="")
+			row = row+1
