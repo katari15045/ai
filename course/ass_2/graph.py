@@ -27,34 +27,28 @@ class Graph:
 		for node_ in nodes_to_expand:
 			q.put(node_)
 
-	def get_next_nodes_to_expand(node):
+	def get_next_nodes_to_expand(parent):
 		nodes_to_expand = []
 		row = 0
-		next_turn = not node.user_turn
+		is_next_turn_user = not parent.user_turn
 		while(row < Constants.dim):
 			col = 0
 			while(col < Constants.dim):
-				if(node.grid[row][col] == Constants.unoccupied):
-					grid_copy_1 = deepcopy(node.grid)
-					grid_copy_2 = deepcopy(node.grid)
-					grid_copy_1[row][col] = Constants.user
-					grid_copy_2[row][col] = Constants.computer
-					is_present_, node_ = Graph.is_present(grid_copy_1)
-					if( is_present_ == True ):
-						new_node_1 = node_
+				if(parent.grid[row][col] == Constants.unoccupied):
+					grid_copy = deepcopy(parent.grid)
+					if( is_next_turn_user == False ):
+						# current turn: user
+						grid_copy[row][col] = Constants.user
 					else:
-						new_node_1 = Node(grid_copy_1, node, next_turn)
-						Graph.configs[str(grid_copy_1)] = new_node_1
-						nodes_to_expand.append(new_node_1)
-					is_present_, node_ = Graph.is_present(grid_copy_2)
+						grid_copy[row][col] = Constants.computer
+					is_present_, node_ = Graph.is_present(grid_copy)
 					if( is_present_ == True ):
-						new_node_2 = node_
+						new_node = node_
 					else:
-						new_node_2 = Node(grid_copy_2, node, next_turn)
-						Graph.configs[str(grid_copy_2)] = new_node_2
-						nodes_to_expand.append(new_node_2)
-					node.children.append(new_node_1)
-					node.children.append(new_node_2)
+						new_node = Node(grid_copy, parent, is_next_turn_user)
+						Graph.configs[str(grid_copy)] = new_node
+						nodes_to_expand.append(new_node)
+					parent.children.append(new_node)
 				col = col+1
 			row = row+1
 		return nodes_to_expand

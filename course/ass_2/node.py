@@ -115,15 +115,15 @@ class Node:
 	def print(self):
 		print("\n", end="")
 		self.print_grid()
+		if(self.user_turn == True):
+			print("Next Turn: " + str(Constants.user))
+		else:
+			print("Next Turn: " + str(Constants.computer))
 		print("Cost: " + str(self.cost))
 		if(self.parent != None):
 			print("Parent's cost: " + str(self.parent.cost))
 		else:
 			print("Parent: None")
-		if(self.user_turn == True):
-			print("Next Turn: " + str(Constants.user))
-		else:
-			print("Next Turn: " + str(Constants.computer))
 
 	def print_grid(self):
 		row = 0
