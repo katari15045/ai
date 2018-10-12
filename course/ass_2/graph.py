@@ -87,6 +87,8 @@ class Graph:
 				configs_2[cur_config] = True
 				print(str(count) + " / " + str(len(Graph.configs)))
 				count = count+1
+				if(cur_node.cost == -2):
+					cur_node.print()
 				cur_node.print()
 				for child in cur_node.children:
 					q.put(child)

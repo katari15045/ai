@@ -115,25 +115,22 @@ class Node:
 			self.cost = -1
 		elif(player == Constants.tie):
 			self.cost = 0
-		self.update_ancestors_cost(player)
+		self.update_ancestors_cost()
 
 
-	def update_ancestors_cost(self, player):
-		child = self
-		while(True):
-			if(child.parent == None):
-				return
-			child.parent.children_updated = child.parent.children_updated+1
-			for other_parent in child.other_parents:
-				other_parent.children_updated = other_parent.children_updated+1
-			if(child.parent.children_updated == len(child.parent.children)):
-				child.parent.update_cost(player)
-				for other_parent in child.other_parents:
-					if(other_parent.children_updated == len(other_parent.children)):
-						other_parent.update_cost(player)
-			else:
-				break
-			child = child.parent
+	def update_ancestors_cost(self):
+		if(self.parent == None):
+			return
+		self.parent.children_updated = self.parent.children_updated+1
+		if(self.parent.children_updated == len(self.parent.children)):
+			self.update_ancestor_cost(self.parent)
+			self.parent.update_ancestors_cost()
+		for other_parent in self.other_parents:
+			other_parent.children_updated = other_parent.children_updated+1
+			if(other_parent.children_updated == len(other_parent.children)):
+				self.update_ancestor_cost(other_parent)
+				other_parent.update_ancestors_cost()
+				
 
 	def update_ancestor_cost(self, parent):
 		iter_1 = True
