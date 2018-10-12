@@ -20,7 +20,7 @@ class Node:
 				if(col == 0):
 					prev = self.grid[row][col]
 				else:
-					if(self.grid[row][col] != prev):
+					if(self.grid[row][col] != prev or self.grid[row][col] == Constants.unoccupied):
 						break
 					prev = self.grid[row][col]
 				if(col == (Constants.dim-1)):
@@ -30,7 +30,7 @@ class Node:
 			if(finished == True):
 				return finished, prev
 			row = row+1
-		return finished, Constants.no_player
+		return finished, Constants.in_progress
 
 	def is_ver_line_present(self):
 		col = 0
@@ -41,7 +41,7 @@ class Node:
 				if(row == 0):
 					prev = self.grid[row][col]
 				else:
-					if(self.grid[row][col] != prev):
+					if(self.grid[row][col] != prev or self.grid[row][col] == Constants.unoccupied):
 						break
 					prev = self.grid[row][col]
 				if(row == (Constants.dim-1)):
@@ -50,7 +50,7 @@ class Node:
 			if(finished == True):
 				return finished, prev
 			col = col+1
-		return finished, Constants.no_player
+		return False, Constants.in_progress
 
 	def is_cross_line_present(self):
 		ind = 0
@@ -58,7 +58,7 @@ class Node:
 			if(ind == 0):
 				prev = self.grid[ind][ind]
 			else:
-				if(self.grid[ind][ind] != prev):
+				if(self.grid[ind][ind] != prev or self.grid[ind][ind] == Constants.unoccupied):
 					break
 				prev = self.grid[ind][ind]
 			if(ind == (Constants.dim-1)):
@@ -70,18 +70,30 @@ class Node:
 			if(row == 0):
 				prev = self.grid[row][col]
 			else:
-				if(self.grid[row][col] != prev):
+				if(self.grid[row][col] != prev or self.grid[row][col] == Constants.unoccupied):
 					break
 				prev = self.grid[row][col]
 			if(col == 0):
 				return True, prev
 			row = row+1
 			col = col-1
-		return False, Constants.no_player
+		return False, Constants.in_progress
+
+	def all_occupied(self):
+		row = 0
+		while(row < Constants.dim):
+			col = 0
+			while(col < Constants.dim):
+				if(self.grid[row][col] == Constants.unoccupied):
+					return False
+				col = col+1
+			row = row+1
+		return True
 
 	def is_complete(self):
 		is_present, player = self.is_hor_line_present()
 		if( is_present == True ):
+			print(self.grid)
 			return is_present, player
 		is_present, player = self.is_ver_line_present()
 		if( is_present == True ):
@@ -89,4 +101,6 @@ class Node:
 		is_present, player = self.is_cross_line_present()
 		if( is_present == True ):
 			return is_present, player
-		return False, Constants.no_player
+		if( self.all_occupied() == True ):
+			return True, Constants.tie
+		return False, Constants.in_progress

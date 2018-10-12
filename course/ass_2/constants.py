@@ -1,3 +1,7 @@
 class Constants:
-	dim = 3
-	no_player = '.'
+	user = 'X'
+	computer = 'O'
+	unoccupied = '.'
+	tie = 'T'
+	in_progress = 'P'
+	dim = 2
