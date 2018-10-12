@@ -11,6 +11,10 @@ class Node:
 		self.user_turn = user_turn
 		self.children_updated = 0
 		self.other_parents = []
+		self.at_least = -2
+		self.at_most = -2
+		self.at_least_valid = False
+		self.at_most_valid = False
 
 	def is_hor_line_present(self):
 		row = 0
@@ -117,7 +121,20 @@ class Node:
 		elif(player == Constants.tie):
 			self.cost = Constants.tie_cost
 		self.update_ancestors_cost()
+		self.update_parent_constraints(self)
 
+	def update_parent_constraints(self, base_node):
+		if(base_node.parent == None):
+			return
+		parent = base_node.parent
+		if(parent.user_turn == True):
+			# Tries to maximize the cost; constraint = 'at least'
+			parent.at_least_valid = True
+			parent.at_least = base_node.cost
+		else:
+			# Tries to minimize the cost; constraint = 'at most'
+			parent.at_most_valid = True
+			parent.at_most = base_node.cost
 
 	def update_ancestors_cost(self):
 		if(self.parent == None):
@@ -148,7 +165,7 @@ class Node:
 			parent.cost = max_
 		else:
 			parent.cost = min_
-
+		self.update_parent_constraints(parent)
 
 	def print(self):
 		print("\n", end="")
