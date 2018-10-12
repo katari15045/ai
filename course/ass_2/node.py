@@ -93,7 +93,6 @@ class Node:
 	def is_complete(self):
 		is_present, player = self.is_hor_line_present()
 		if( is_present == True ):
-			print(self.grid)
 			return is_present, player
 		is_present, player = self.is_ver_line_present()
 		if( is_present == True ):

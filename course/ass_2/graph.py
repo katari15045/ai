@@ -25,7 +25,10 @@ class Graph:
 
 	def add_children_to_q(children, q):
 		for child in children:
-			q.put(child)
+			repeating, node_ = Graph.is_repeating(child.grid)
+			# Don't expand if it is already being expanded
+			if(repeating == False):
+				q.put(child)
 
 	def get_next_moves(node):
 		moves = []
@@ -59,14 +62,27 @@ class Graph:
 			row = row+1
 		return grid
 
+	def is_repeating(tar_grid):
+		# True, if it is present at least twice
+		count = 0
+		q = Queue()
+		q.put(Graph.root)
+		while(q.qsize() != 0):
+			cur_node = q.get()
+			if(cur_node.grid == tar_grid):
+				count = count+1
+				if(count == 2):
+					return True, cur_node
+			for child in cur_node.children:
+				q.put(child)
+		return False, None
+
 	# BFS
 	def print():
 		print("Graph: ")
 		q = Queue()
 		q.put(Graph.root)
-		while(True):
-			if(q.qsize() == 0):
-				break
+		while(q.qsize() != 0):
 			cur_node = q.get()
 			print(cur_node)
 			for child in cur_node.children:

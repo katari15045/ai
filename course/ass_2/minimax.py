@@ -13,6 +13,7 @@ Assumptions:
 class Minimax:
 	def tic_tac_toe():
 		Graph.init()
-		Graph.print()
+		#Graph.print()
+		print("Nodes: " + str(Graph.node_count))
 
 Minimax.tic_tac_toe()
