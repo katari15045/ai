@@ -2,11 +2,12 @@ from constants import Constants
 
 class Node:
 
-	def __init__(self, grid, parent):
+	def __init__(self, grid, parent, user_turn):
 		self.grid = grid
 		self.cost = 0
 		self.parent = parent
 		self.children = []
+		self.user_turn = user_turn
 
 	def is_hor_line_present(self):
 		row = 0
@@ -119,6 +120,10 @@ class Node:
 			print("Parent's cost: " + str(self.parent.cost))
 		else:
 			print("Parent: None")
+		if(self.user_turn == True):
+			print("Next Turn: " + str(Constants.user))
+		else:
+			print("Next Turn: " + str(Constants.computer))
 
 	def print_grid(self):
 		row = 0

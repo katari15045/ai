@@ -12,7 +12,7 @@ class Graph:
 	def init():
 		Graph.configs = dict()
 		empty_grid = Graph.get_empty_grid()
-		Graph.root = Node(empty_grid, None)
+		Graph.root = Node(empty_grid, None, True)
 		q = Queue()
 		q.put(Graph.root)
 		while(q.qsize() != 0):
@@ -30,6 +30,7 @@ class Graph:
 	def get_next_nodes_to_expand(node):
 		nodes_to_expand = []
 		row = 0
+		next_turn = not node.user_turn
 		while(row < Constants.dim):
 			col = 0
 			while(col < Constants.dim):
@@ -42,14 +43,14 @@ class Graph:
 					if( is_present_ == True ):
 						new_node_1 = node_
 					else:
-						new_node_1 = Node(grid_copy_1, node)
+						new_node_1 = Node(grid_copy_1, node, next_turn)
 						Graph.configs[str(grid_copy_1)] = new_node_1
 						nodes_to_expand.append(new_node_1)
 					is_present_, node_ = Graph.is_present(grid_copy_2)
 					if( is_present_ == True ):
 						new_node_2 = node_
 					else:
-						new_node_2 = Node(grid_copy_2, node)
+						new_node_2 = Node(grid_copy_2, node, next_turn)
 						Graph.configs[str(grid_copy_2)] = new_node_2
 						nodes_to_expand.append(new_node_2)
 					node.children.append(new_node_1)
