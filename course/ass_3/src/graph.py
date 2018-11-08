@@ -11,20 +11,38 @@ class Graph:
 	@staticmethod
 	def init():
 		Graph.dist_matrix = []
-		Graph.x_graph = networkx.Graph()
-		# fill with 0s
 		row = 0
 		while(row < Constants.tot_cities):
 			col = 0
 			new_row = []
 			while(col < row):
 				dist = randint(1, Constants.max_dist)
-				pheromone = col+2
+				pheromone = Constants.init_pherm
 				new_edge = Edge(dist, pheromone)
 				new_row.append(new_edge)
-				Graph.x_graph.add_edge(row, col, len_=dist, pheromone=pheromone)
 				col = col+1
 			Graph.dist_matrix.append(new_row)
+			row = row+1
+		Graph.draw()
+
+	def edge(node_ind_1, node_ind_2):
+		max_ = max(node_ind_1, node_ind_2)
+		min_ = min(node_ind_1, node_ind_2)
+		# col is always < row
+		return Graph.dist_matrix[max_][min_]
+
+	@staticmethod
+	def draw():
+		Graph.x_graph = networkx.Graph()
+		row = 0
+		while(row < Constants.tot_cities):
+			col = 0
+			while(col < row):
+				cur_edge = Graph.edge(row, col)
+				cur_pherm = cur_edge.pheromone
+				cur_dist = cur_edge.len_
+				Graph.x_graph.add_edge(row, col, len_=cur_dist, pheromone=cur_pherm)
+				col = col+1
 			row = row+1
 		fig = pyplot.figure()
 		fig.patch.set_facecolor('#66ff99')

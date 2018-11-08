@@ -1,11 +1,10 @@
 from constants import Constants
-from graph import Graph
+from aco import Aco
 
 class Main:
 
 	@staticmethod
 	def main():
-		Graph.init()
-		Graph.print()
+		Aco.start()
 
 Main.main()
