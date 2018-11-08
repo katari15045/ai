@@ -6,6 +6,6 @@ class Main:
 	@staticmethod
 	def main():
 		Graph.init()
-		print(Graph.dist_matrix)
+		Graph.print()
 
 Main.main()
