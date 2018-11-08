@@ -1,4 +1,10 @@
 
+Assumptions:
+------------
+-> Ant is smart enough to not visit a node that it has already visited in the same tour.
+-> Ant knows how many nodes it has visited, how many nodes to visit, so that, it comes out of the tour, when all nodes are visited.
+-> Every city is connected to every other city; if you want to disconnect 2 cities, give a huge weight (distance) to the edge connecting both the cities.
+
 Approach
 --------
 -> Tour of an ant: it randomly selects a city to start with. It then selects the neighbour with the highest probability (depends on pheromone_in_the_path and visibility_of_the_path (1 / length_of_path)). If there are multiple nodes with same probability, it selects a node with minimum distance. While selecting a node, an ant makes sure that it doesn't select a node that has already been visited. If it visits all the nodes (visited_nodes = total_nodes), it immediately exits from its tour.
