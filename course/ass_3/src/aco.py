@@ -11,7 +11,7 @@ class Aco:
 		count = 1
 		while(count <= Constants.iter_):
 			Aco.epoch()
-			Graph.draw()
+			Graph.draw(Constants.vis_base + str(count) + ".png")
 			count = count+1
 
 	@staticmethod
@@ -43,7 +43,7 @@ class Aco:
 			city_1 = visited_cities[ind]
 			city_2 = visited_cities[ind+1]
 			cur_pheromone = Graph.edge(city_1, city_2).pheromone
-			Graph.edge(city_1, city_2).pheromone = ((1-Constants.pherm_evap_rate)*cur_pheromone) + (1/tour_dist)
+			Graph.edge(city_1, city_2).pheromone = ((1-Constants.pherm_evap_rate)*cur_pheromone) + (Constants.q/tour_dist)
 			ind = ind+1
 
 	@staticmethod

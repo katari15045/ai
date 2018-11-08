@@ -23,7 +23,7 @@ class Graph:
 				col = col+1
 			Graph.dist_matrix.append(new_row)
 			row = row+1
-		Graph.draw()
+		Graph.draw(Constants.vis_base + "0.png")
 
 	def edge(node_ind_1, node_ind_2):
 		max_ = max(node_ind_1, node_ind_2)
@@ -32,7 +32,7 @@ class Graph:
 		return Graph.dist_matrix[max_][min_]
 
 	@staticmethod
-	def draw():
+	def draw(filename):
 		Graph.x_graph = networkx.Graph()
 		row = 0
 		while(row < Constants.tot_cities):
@@ -57,10 +57,11 @@ class Graph:
 		networkx.draw_networkx_labels(Graph.x_graph, pos=pos, font_size=7, font_color='white')
 		networkx.draw_networkx_edges(Graph.x_graph, pos=pos, edgelist=edges, width=edge_pheromones, edge_color='#00cc44')
 		networkx.draw_networkx_edge_labels(Graph.x_graph, pos=pos, edge_labels=edge_lens, font_size=7, label_pos=0.4)
-		pyplot.show()
+		pyplot.savefig(filename)
 
 	@staticmethod
 	def print():
+		print("Graph: ")
 		row = 0
 		while(row < Constants.tot_cities):
 			col = 0
@@ -68,3 +69,4 @@ class Graph:
 				print(Graph.dist_matrix[row][col])
 				col = col+1
 			row = row+1
+		print("============================================")
