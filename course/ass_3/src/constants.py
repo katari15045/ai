@@ -1,7 +1,7 @@
 class Constants:
 	iter_ = 6
 	tot_cities = 8
-	tot_ants = 3
+	tot_ants = 6
 	# new_pheromone = (old_pheromone(1-pherm_evap_rate)) + (q/tour_distance)
 	q = 5000
 	max_dist = 4000
@@ -10,3 +10,5 @@ class Constants:
 	beta_visibility = 1.3
 	init_pherm = 1
 	vis_base = "vis/"
+	# only when random=False is passed to Aco.move_ant()
+	start_city = 0

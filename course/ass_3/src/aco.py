@@ -10,7 +10,7 @@ class Aco:
 		Graph.init()
 		count = 1
 		while(count <= Constants.iter_):
-			print("Iteration 1/" + str(Constants.iter_) + ": ")
+			print("Iteration " + str(count) + "/" + str(Constants.iter_) + ": ")
 			Aco.epoch()
 			Graph.draw(Constants.vis_base + str(count) + ".png")
 			count = count+1
@@ -21,7 +21,7 @@ class Aco:
 		visited_cities_grid = []
 		tour_dists = []
 		while(count <= Constants.tot_ants):
-			visited_cities, tour_dist = Aco.move_ant()
+			visited_cities, tour_dist = Aco.move_ant(random=False)
 			visited_cities_grid.append(visited_cities)
 			tour_dists.append(tour_dist)
 			count = count+1
@@ -39,11 +39,14 @@ class Aco:
 		print("==========================================")
 
 	@staticmethod
-	def move_ant():
+	def move_ant(random=True):
 		# The cities are appended based on the visiting order, which, gives the edges too
 		visited_cities = []
-		# Randomly select start node
-		start_city = randint(0, Constants.tot_cities-1)
+		if(random == True):
+			# Randomly select start node
+			start_city = randint(0, Constants.tot_cities-1)
+		else:
+			start_city = Constants.start_city
 		cur_city = start_city
 		tour_dist = 0
 		# Visit all the nodes
