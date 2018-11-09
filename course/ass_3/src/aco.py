@@ -6,17 +6,18 @@ from random import randint
 class Aco:
 
 	@staticmethod
-	def start():
+	def start(verbose=False):
 		Graph.init()
 		count = 1
 		while(count <= Constants.iter_):
-			print("Iteration " + str(count) + "/" + str(Constants.iter_) + ": ")
-			Aco.epoch()
+			if(verbose == True):
+				print("Iteration " + str(count) + "/" + str(Constants.iter_) + ": ")
+			Aco.epoch(verbose)
 			Graph.draw(Constants.vis_base + str(count) + ".png")
 			count = count+1
 
 	@staticmethod
-	def epoch():
+	def epoch(verbose=False):
 		count = 1
 		visited_cities_grid = []
 		tour_dists = []
@@ -30,13 +31,15 @@ class Aco:
 		while(count < len(visited_cities_grid)):
 			visited_cities = visited_cities_grid[count]
 			tour_dist = tour_dists[count]
-			print("Ant " + str(count+1) + "/" + str(Constants.tot_ants) + ": ")
-			print("tour_dist: " + str(tour_dist))
-			print("visited_cities: " + str(visited_cities))
-			print()
+			if(verbose == True):
+				print("Ant " + str(count+1) + "/" + str(Constants.tot_ants) + ": ")
+				print("tour_dist: " + str(tour_dist))
+				print("visited_cities: " + str(visited_cities))
+				print()
 			Aco.update_pheromone(visited_cities, tour_dist)
 			count = count+1
-		print("==========================================")
+		if(verbose == True):
+			print("==========================================")
 
 	@staticmethod
 	def move_ant(random=True):
