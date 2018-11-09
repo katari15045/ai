@@ -5,6 +5,6 @@ class Main:
 
 	@staticmethod
 	def main():
-		Aco.start()
+		Aco.start(verbose=True)
 
 Main.main()

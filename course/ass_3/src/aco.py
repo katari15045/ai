@@ -11,10 +11,13 @@ class Aco:
 		count = 1
 		while(count <= Constants.iter_):
 			if(verbose == True):
-				print("Iteration " + str(count) + "/" + str(Constants.iter_) + ": ")
-			Aco.epoch(verbose)
+				print("Iteration " + str(count) + "/" + str(Constants.iter_) + ": ", end="")
+			max_tour_dist = Aco.epoch(verbose)
+			if(verbose == True):
+				print("max_tour_dist: " + str(max_tour_dist))
 			Graph.draw(Constants.vis_base + str(count) + ".png")
 			count = count+1
+			
 
 	@staticmethod
 	def epoch(verbose=False):
@@ -40,6 +43,7 @@ class Aco:
 			count = count+1
 		if(verbose == True):
 			print("==========================================")
+		return max(tour_dists)
 
 	@staticmethod
 	def move_ant(random=True):
