@@ -17,8 +17,19 @@ class Aco:
 	@staticmethod
 	def epoch():
 		count = 1
+		visited_cities_grid = []
+		tour_dists = []
 		while(count <= Constants.tot_ants):
-			Aco.move_ant()
+			visited_cities, tour_dist = Aco.move_ant()
+			visited_cities_grid.append(visited_cities)
+			tour_dists.append(tour_dist)
+			count = count+1
+		# Update Pheromone
+		count = 0
+		while(count < len(visited_cities_grid)):
+			visited_cities = visited_cities_grid[count]
+			tour_dist = tour_dists[count]
+			Aco.update_pheromone(visited_cities, tour_dist)
 			count = count+1
 
 	@staticmethod
@@ -35,8 +46,11 @@ class Aco:
 			next_city_, dist_ = Aco.next_city(cur_city, visited_cities)
 			tour_dist = tour_dist+dist_
 			if(next_city_ == -1):
-				break
+				return visited_cities, tour_dist
 			cur_city = next_city_
+	
+	@staticmethod
+	def update_pheromone(visited_cities, tour_dist):
 		# Update Pheromone of those edges which are visited by the ant
 		ind = 0
 		while(ind < (len(visited_cities)-1)):
