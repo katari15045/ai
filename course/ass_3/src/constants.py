@@ -1,7 +1,7 @@
 class Constants:
-	iter_ = 1
+	iter_ = 6
 	tot_cities = 8
-	tot_ants = 100
+	tot_ants = 3
 	# new_pheromone = (old_pheromone(1-pherm_evap_rate)) + (q/tour_distance)
 	q = 5000
 	max_dist = 4000

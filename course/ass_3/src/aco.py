@@ -10,6 +10,7 @@ class Aco:
 		Graph.init()
 		count = 1
 		while(count <= Constants.iter_):
+			print("Iteration 1/" + str(Constants.iter_) + ": ")
 			Aco.epoch()
 			Graph.draw(Constants.vis_base + str(count) + ".png")
 			count = count+1
@@ -29,8 +30,13 @@ class Aco:
 		while(count < len(visited_cities_grid)):
 			visited_cities = visited_cities_grid[count]
 			tour_dist = tour_dists[count]
+			print("Ant " + str(count+1) + "/" + str(Constants.tot_ants) + ": ")
+			print("tour_dist: " + str(tour_dist))
+			print("visited_cities: " + str(visited_cities))
+			print()
 			Aco.update_pheromone(visited_cities, tour_dist)
 			count = count+1
+		print("==========================================")
 
 	@staticmethod
 	def move_ant():
