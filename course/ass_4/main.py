@@ -20,10 +20,12 @@ class Main:
 		while(count_games <= Main.games):
 			count_steps = 1
 			new_state = env.reset()
-			while(count_steps <= Main.steps):
+			#while(count_steps <= Main.steps):
+			while(0 != 1):
 				Main.print_q_data(new_state, before=True)
 				env.render()
 				#action = env.action_space.sample()
+				#action = Main.random_action(new_state)
 				action = Main.best_action(new_state)
 				old_state = []
 				for num in new_state:
@@ -49,6 +51,13 @@ class Main:
 		else:
 			return Main.action_with_max_q(state)
 	
+	@staticmethod
+	def random_action(state):
+		state = Main.state_to_str(state)
+		if(Main.q_data.get(state) == None):
+			Main.add_state_to_q_data(state)
+		return randint(0, Main.actions-1)
+
 	@staticmethod
 	def update_q_data(old_state, action, reward, new_state):
 		old_state = Main.state_to_str(old_state)
