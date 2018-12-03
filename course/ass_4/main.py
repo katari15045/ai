@@ -9,17 +9,22 @@ class Main:
 	steps = 300
 	gamma = 0.3
 	actions = 4
+	goal_state = [4, 4]
+	manhattan_dists_file = "manhattan_dists.csv"
 
 	@staticmethod
 	def main():
 		# pre processing
 		Main.q_data = dict()
+		Main.manhattan_dists = []
 		# start
 		env = gym.make("maze-sample-5x5-v0")
 		count_games = 1
 		while(count_games <= Main.games):
 			count_steps = 1
 			new_state = env.reset()
+			new_state[0] = int(new_state[0])
+			new_state[1] = int(new_state[1])
 			#while(count_steps <= Main.steps):
 			while(0 != 1):
 				Main.print_q_data(new_state, before=True)
@@ -27,6 +32,7 @@ class Main:
 				#action = env.action_space.sample()
 				#action = Main.random_action(new_state)
 				action = Main.best_action(new_state)
+				Main.manhattan_dists.append(Main.manhattan_dist(new_state))
 				old_state = []
 				for num in new_state:
 					old_state.append(num)
@@ -36,11 +42,13 @@ class Main:
 				Main.update_q_data(old_state, action, reward, new_state)
 				Main.print_q_data(new_state, before=False)
 				if(game_over):
+					Main.manhattan_dists.append(Main.manhattan_dist(new_state))
 					print("Game " + str(count_games) + " Over! In " + str(count_steps) + " steps.")
 					break
 				count_steps = count_steps+1
 			count_games = count_games+1
 		env.close()
+		Main.save_manhattan_dists()
 
 	@staticmethod
 	def best_action(state):
@@ -67,6 +75,12 @@ class Main:
 		max_q_action = Main.action_with_max_q(new_state)
 		max_q = Main.q_data[new_state][max_q_action]
 		Main.q_data[old_state][action] = reward + (Main.gamma * max_q)		
+
+	@staticmethod
+	def manhattan_dist(cur_state):
+		x_dist = abs(cur_state[0] - Main.goal_state[0])
+		y_dist = abs(cur_state[1] - Main.goal_state[1])
+		return x_dist + y_dist	
 
 	# Given a state, it returns an action with max q value
 	@staticmethod
@@ -101,6 +115,17 @@ class Main:
 			print(key_ + ": " + str(value_))
 		if(before == False):
 			print("====================================")
+
+	@staticmethod
+	def save_manhattan_dists():
+		book = open(Main.manhattan_dists_file, "w")
+		book.write("Step (Just before step k),Manhattan Distance\n")
+		ind = 0
+		while(ind < len(Main.manhattan_dists)):
+			manhattan_dist_ = Main.manhattan_dists[ind]
+			book.write(str(ind+1) + "," + str(manhattan_dist_) + "\n")
+			ind = ind+1
+		book.close()
 
 	@staticmethod
 	def display_available_envs():
