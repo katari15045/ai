@@ -11,9 +11,9 @@ class nn:
 		self.dim_out = 10
 
 		# Network Parameters
-		self.batch_size = 256
-		self.epochs = 30
-		self.lr = 0.0001
+		self.batch_size = 32
+		self.epochs = 3
+		self.lr = 0.001
 		self.tf_act = tf.nn.relu
 		self.tf_weight_initializer = tf.initializers.random_normal()
 
@@ -80,19 +80,19 @@ class nn:
 		saver.restore(self.sess, "model.ckpt")
 		print("model restored")
 		iters = int( len(test_x) / self.batch_size )
-		pred_ys = []
+		pred_y = np.array([]).reshape(0, 10)
 		losses = []
 		for iter_ in range(iters):
 			batch_x = test_x[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
 			batch_y = test_y[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
 			loss = self.sess.run(self.tf_loss, feed_dict={self.tf_X:batch_x, self.tf_y:batch_y})
 			losses.append(loss)
-			pred_y = self.sess.run(self.tf_lyr_out, feed_dict={self.tf_X:batch_x, self.tf_y:batch_y})
-			pred_ys.append(pred_y)
+			cur_pred_y = self.sess.run(self.tf_lyr_out, feed_dict={self.tf_X:batch_x, self.tf_y:batch_y})
+			pred_y = np.concatenate((pred_y, cur_pred_y))
 		loss = sum(losses) / len(losses)
 		print("loss_test: {0}".format(loss))
 		self.sess.close()
-		return np.array(pred_ys)
+		return pred_y
 
 
 
