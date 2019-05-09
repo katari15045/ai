@@ -1,4 +1,6 @@
-1. command line args for epochs, batch_size, optimizer, lr, neurons in each hidden layer, act in each hidden layer etc
-2. train.py, test.py - create files instead of separate methods in one class
-3. tf.Constant
-4. use previously computed pred for loss, previously computed loss for optimizer
+0. separate accuracy from forward pass (during forward pass, it is not necessary that you are given ground truth and can compute accuracy)
+1. save model in models folder and not in code folder!
+2. command line args for epochs, batch_size, optimizer, lr, neurons in each hidden layer, act in each hidden layer etc
+3. train.py, test.py - create files instead of separate methods in one class
+4. tf.Constant
+5. use previously computed pred for loss, previously computed loss for optimizer

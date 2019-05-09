@@ -1,6 +1,8 @@
+
 from time import time
 from pre_processor import pre_processor
-from nn import nn
+from train import train
+from test import test
 
 class main:
 
@@ -8,10 +10,11 @@ class main:
 	def main():
 		pre_proc = pre_processor()
 		train_x, train_y, val_x, val_y, test_x, test_y = pre_proc.get_data()
-		model = nn()
-		model.train(train_x, train_y, val_x, val_y)
-		pred_y = model.test(test_x, test_y)
-		print("pred_y: {0}".format(pred_y.shape))
+		training = train()
+		training.start(train_x, train_y, val_x, val_y)
+		testing = test()
+		pred_y, acc, loss = testing.start(test_x, test_y)
+		print("pred_y: {0}, acc: {1}, loss: {2}".format(pred_y.shape, acc, loss))
 
 start_time = time()
 main.main()

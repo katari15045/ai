@@ -17,34 +17,55 @@ class nn:
 		self.tf_act = tf.nn.relu
 		self.tf_weight_initializer = tf.initializers.random_normal()
 
-		self.forward_prop()
-		self.back_prop()
-
-	def forward_prop(self):
+	def define_tensors(self):
 		# weights
-		self.tf_w1 = tf.Variable(self.tf_weight_initializer([self.dim_inp, self.dim_hid_1]), dtype=tf.float32)
-		self.tf_w2 = tf.Variable(self.tf_weight_initializer([self.dim_hid_1, self.dim_hid_2]), dtype=tf.float32)
-		self.tf_w3 = tf.Variable(self.tf_weight_initializer([self.dim_hid_2, self.dim_out]), dtype=tf.float32)
+		self.tf_w1 = tf.Variable(self.tf_weight_initializer([self.dim_inp, self.dim_hid_1]), dtype=tf.float32, name="w1")
+		self.tf_w2 = tf.Variable(self.tf_weight_initializer([self.dim_hid_1, self.dim_hid_2]), dtype=tf.float32, name="w2")
+		self.tf_w3 = tf.Variable(self.tf_weight_initializer([self.dim_hid_2, self.dim_out]), dtype=tf.float32, name="w3")
 
 		# biases
-		self.tf_b1 = tf.Variable(tf.zeros(self.dim_hid_1))
-		self.tf_b2 = tf.Variable(tf.zeros(self.dim_hid_2))
-		self.tf_b3 = tf.Variable(tf.zeros(self.dim_out))
+		self.tf_b1 = tf.Variable(tf.zeros(self.dim_hid_1), name="b1")
+		self.tf_b2 = tf.Variable(tf.zeros(self.dim_hid_2), name="b2")
+		self.tf_b3 = tf.Variable(tf.zeros(self.dim_out), name="b3")
 
 		# input layer
-		self.tf_X = tf.placeholder(tf.float32, shape=[None, self.dim_inp])
+		self.tf_X = tf.placeholder(tf.float32, shape=[None, self.dim_inp], name="X")
 
+		# Ground Truth
+		self.tf_y = tf.placeholder(tf.float32, shape=[None, self.dim_out], name="y")
+
+	def restore_tensors(self, sess, meta_filepath, ckpt_filepath):
+		saver = tf.train.import_meta_graph(meta_filepath)
+		saver.restore(sess, ckpt_filepath)
+		graph = tf.get_default_graph()
+
+		# weeights
+		self.tf_w1 = graph.get_tensor_by_name("w1:0")
+		self.tf_w2 = graph.get_tensor_by_name("w2:0")
+		self.tf_w3 = graph.get_tensor_by_name("w3:0")
+
+		# biases
+		self.tf_b1 = graph.get_tensor_by_name("b1:0")
+		self.tf_b2 = graph.get_tensor_by_name("b2:0")
+		self.tf_b3 = graph.get_tensor_by_name("b3:0")
+
+		# input layer
+		self.tf_X = graph.get_tensor_by_name("X:0")
+
+		# Ground Truth
+		self.tf_y = graph.get_tensor_by_name("y:0")
+
+	def forward_prop(self):
 		# Hidden Layers
 		self.tf_lyr_hid_1 = self.tf_act(tf.matmul(self.tf_X, self.tf_w1) + self.tf_b1)
 		self.tf_lyr_hid_2 = self.tf_act(tf.matmul(self.tf_lyr_hid_1, self.tf_w2) + self.tf_b2)
 		self.tf_lyr_out = self.tf_act(tf.matmul(self.tf_lyr_hid_2, self.tf_w3) + self.tf_b3)
 
-		# loss
-		self.tf_y = tf.placeholder(tf.float32, shape=[None, self.dim_out])
+	def compute_loss(self):
 		# self.tf_loss = tf.reduce_mean(tf.square(self.tf_lyr_out - self.tf_y))
 		self.tf_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=self.tf_lyr_out, labels=self.tf_y))
 
-		# accuracy
+	def compute_acc(self):
 		self.tf_acc_, self.tf_acc = tf.metrics.accuracy(tf.argmax(self.tf_y, axis=1), tf.argmax(self.tf_lyr_out, axis=1), name="tf_acc")
 
 	def back_prop(self):
@@ -52,7 +73,7 @@ class nn:
 		self.tf_optimizer = tf.train.AdamOptimizer()
 		self.tf_train = self.tf_optimizer.minimize(self.tf_loss)
 
-	def analyze_epoch(self, x, y):
+	def analyze_epoch(self, x, y, sess):
 		iters = int( len(x) / self.batch_size )
 		loss = []
 		acc = []
@@ -60,7 +81,7 @@ class nn:
 		for iter_ in range(iters):
 			batch_x = x[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
 			batch_y = y[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
-			batch_pred_y, batch_loss, batch_acc = self.sess.run([self.tf_lyr_out, self.tf_loss, self.tf_acc], 
+			batch_pred_y, batch_loss, batch_acc = sess.run([self.tf_lyr_out, self.tf_loss, self.tf_acc], 
 													feed_dict={self.tf_X:batch_x, self.tf_y:batch_y})
 			pred_y = np.concatenate((pred_y, batch_pred_y))
 			loss.append(batch_loss)
@@ -68,42 +89,3 @@ class nn:
 		loss = sum(loss) / len(loss)
 		acc = sum(acc) / len(acc)
 		return pred_y, loss, acc
-
-	def train(self, train_x, train_y, val_x, val_y):
-		self.sess = tf.Session()
-		self.sess.run(tf.global_variables_initializer())
-		self.sess.run(tf.local_variables_initializer())
-
-		saver = tf.train.Saver()
-		for epoch in range(self.epochs):
-			iters = int( len(train_x) / self.batch_size )
-			for iter_ in range(iters):
-				batch_x = train_x[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
-				batch_y = train_y[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
-				self.sess.run(self.tf_train, feed_dict={self.tf_X:batch_x, self.tf_y:batch_y})
-			# train loss
-			_, loss_train, acc_train = self.analyze_epoch(train_x, train_y)
-			# val loss
-			_, loss_val, acc_val = self.analyze_epoch(val_x, val_y)
-			print("epoch: {0}, loss_train: {1}, acc_train: {2}, loss_val: {3}, acc_val: {4}"
-						.format(epoch+1, loss_train, acc_train, loss_val, acc_val))
-		path = saver.save(self.sess, "model.ckpt")
-		print("model saved in {0}".format(path))
-		self.sess.close()
-
-	def test(self, test_x, test_y):
-		self.sess = tf.Session()
-		saver = tf.train.Saver()
-		saver.restore(self.sess, "model.ckpt")
-		print("model restored")
-		
-		self.sess.run(tf.local_variables_initializer())
-
-		# test
-		pred_y, loss, acc = self.analyze_epoch(test_x, test_y)
-		print("loss_test: {0}, acc_test: {1}".format(loss, acc))
-		self.sess.close()
-		return pred_y
-
-
-
