@@ -46,8 +46,11 @@ class train:
 			iters = int( len(train_x) / self.conf_.batch_size )
 
 			for iter_ in range(iters):
+				# extract batch data
 				batch_x = train_x[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
 				batch_y = train_y[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
+
+				# forward & back propagation
 				self.sess.run(self.nn.tf_train, feed_dict={self.nn.tf_X:batch_x, self.nn.tf_y:batch_y})
 
 			# train loss

@@ -4,8 +4,11 @@ import logging
 class conf:
 
 	def __init__(self): 
+
 		self.dim_lyrs = []
 		self.dropout_rates = []
+
+		# configure logging
 		filename = "../logs/log.txt"
 		handlers_ = [logging.FileHandler(filename, mode='a'), logging.StreamHandler()] # print on stdout too.
 		logging.basicConfig(level=logging.INFO, format='%(message)s', handlers=handlers_)
@@ -13,8 +16,11 @@ class conf:
 		logging.info("{0} UTC".format(datetime.datetime.utcnow()))
 
 	def get_value_from_line(self, line, numeric=True, decimal=False):
+
+		# remove newline character at the end of the line
 		line = line.rstrip("\n")
 		arr = line.split("=")
+		# ignore key (index 0) and extract value (index 1)
 		value = arr[1]
 		if(numeric == False):
 			return value
@@ -23,6 +29,7 @@ class conf:
 		return float(value)
 
 	def start(self):
+
 		# parse conf/conf.txt
 		book = open("../conf/conf.txt", "r")
 		content = book.readlines()
@@ -31,10 +38,14 @@ class conf:
 		# hidden layers = all layers except input layer
 		self.tot_hid_lyrs = tot_lyrs - 1
 		count = 0
+
+		# extract dimensions of each layer
 		while(count < tot_lyrs ):
 			cur_dim = self.get_value_from_line(content[count])
 			self.dim_lyrs.append(cur_dim)
 			count = count  + 1
+
+		# extract parameters after first "---"
 		base_index = tot_lyrs + 1
 		self.batch_size = self.get_value_from_line(content[base_index])
 		self.epochs = self.get_value_from_line(content[base_index+1])
