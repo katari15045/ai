@@ -30,7 +30,7 @@ class nn:
 
 		# optimizer
 		if(self.conf_.optimizer == "adam"):
-			self.tf_optimizer = tf.train.AdamOptimizer()
+			self.tf_optimizer = tf.train.AdamOptimizer(learning_rate=self.conf_.lr)
 		else:
 			self.tf_optimizer = tf.train.GradientDescentOptimizer(self.conf_.lr) # optimizer=gd
 
