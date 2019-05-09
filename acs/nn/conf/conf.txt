@@ -6,8 +6,8 @@ dim_out=10
 batch_size=32
 epochs=3
 lr=0.001
-act=relu
-weight_initializer=random_normal
+act=sigmoid
+last_layer_act=sigmoid
 optimizer=adam
 loss=softmax_crossentropy
 ---

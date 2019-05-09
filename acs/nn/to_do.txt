@@ -1,2 +1,2 @@
-0. Error Handling: default values for parameters in conf.txt; also try to provide various options for the user instead of just 1 activation, etc.
 1. Problem Statement, Design Documentation of Solution using EML/class diagrams
+2. dropout
