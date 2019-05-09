@@ -21,7 +21,9 @@ class test:
 		self.sess = tf.Session()
 
 		# Build Computation Graph
-		self.nn.restore_tensors(self.sess, "models/sess.ckpt.meta", "models/sess.ckpt")
+		meta_filepath = "../models/sess-" + str(self.conf_.epochs) + ".meta"
+		ckpt_filepath = "../models/sess-" + str(self.conf_.epochs)
+		self.nn.restore_tensors(self.sess, meta_filepath, ckpt_filepath)
 		self.nn.forward_prop(testing=True)
 		self.nn.compute_loss()
 		self.nn.compute_acc()

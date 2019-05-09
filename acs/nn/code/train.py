@@ -39,6 +39,7 @@ class train:
 	def start(self, train_x, train_y, val_x, val_y):
 
 		logging.info("training...")
+		self.saver = tf.train.Saver(max_to_keep=1)
 
 		# core training
 		for epoch in range(self.conf_.epochs):
@@ -55,17 +56,14 @@ class train:
 			# val loss
 			_, loss_val, acc_val = self.nn.analyze_epoch(val_x, val_y, self.sess)
 
+			# save model
+			_ = self.saver.save(self.sess, "../models/sess", global_step=int(epoch+1))
+
 			# log the performance at each epoch
 			logging.info("epoch: {0}, loss_train: {1}, acc_train: {2}, loss_val: {3}, acc_val: {4}"
 						.format(epoch+1, loss_train, acc_train, loss_val, acc_val))
 
-		self.save_model()
 		self.sess.close()
-
-	def save_model(self):
-		self.saver = tf.train.Saver()
-		path = self.saver.save(self.sess, "models/sess.ckpt")
-		logging.info("train session saved in {0}".format(path))
 
 start_time = time()
 
