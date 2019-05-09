@@ -1,1 +1,2 @@
-1. Problem Statement, Design Documentation of Solution using EML/class diagrams
+1. Design Documentation of Solution using EML/class diagrams
+2. While training, save the model for every 'k' epochs

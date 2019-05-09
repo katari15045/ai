@@ -7,7 +7,8 @@ class conf:
 		self.dim_lyrs = []
 		self.dropout_rates = []
 		filename = "../logs/log.txt"
-		logging.basicConfig(filename=filename, filemode='a', level=logging.INFO, format='%(message)s')
+		handlers_ = [logging.FileHandler(filename, mode='a'), logging.StreamHandler()] # print on stdout too.
+		logging.basicConfig(level=logging.INFO, format='%(message)s', handlers=handlers_)
 		logging.info("----------------------------------------------------------------")
 		logging.info("{0} UTC".format(datetime.datetime.utcnow()))
 
