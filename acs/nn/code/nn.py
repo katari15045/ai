@@ -94,7 +94,7 @@ class nn:
 		# Ground Truth
 		self.tf_y = graph.get_tensor_by_name("y:0")
 
-	def forward_prop(self):
+	def forward_prop(self, testing=False):
 		self.tf_lyrs = []
 		count = 0
 		while(count < self.conf_.tot_hid_lyrs):
@@ -105,9 +105,14 @@ class nn:
 			cur_weight = self.tf_weights[count]
 			cur_bias = self.tf_biases[count]
 			if(count == (self.conf_.tot_hid_lyrs-1)):
+				# last layer
 				cur_tensor = self.tf_last_lyr_act(tf.matmul(cur_inp, cur_weight) + cur_bias)
 			else:
 				cur_tensor = self.tf_act(tf.matmul(cur_inp, cur_weight) + cur_bias)
+				# dropout during training
+				if(testing == False):
+					cur_dropout_rate = self.conf_.dropout_rates[count]
+					cur_tensor = tf.nn.dropout(cur_tensor, rate=cur_dropout_rate)
 			self.tf_lyrs.append(cur_tensor)
 			count = count + 1
 

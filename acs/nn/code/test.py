@@ -11,7 +11,7 @@ class test:
 
 		# Build Computation Graph
 		self.nn.restore_tensors(self.sess, "models/sess.ckpt.meta", "models/sess.ckpt")
-		self.nn.forward_prop()
+		self.nn.forward_prop(testing=True)
 		self.nn.compute_loss()
 		self.nn.compute_acc()
 

@@ -10,4 +10,5 @@ act=sigmoid
 last_layer_act=sigmoid
 optimizer=adam
 loss=softmax_crossentropy
+dropout_rate=0.2,0.4,0.5
 ---
