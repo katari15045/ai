@@ -17,6 +17,10 @@ class nn:
 		self.tf_act = tf.nn.relu
 		self.tf_weight_initializer = tf.initializers.random_normal()
 
+		self.forward_prop()
+		self.back_prop()
+
+	def forward_prop(self):
 		# weights
 		self.tf_w1 = tf.Variable(self.tf_weight_initializer([self.dim_inp, self.dim_hid_1]), dtype=tf.float32)
 		self.tf_w2 = tf.Variable(self.tf_weight_initializer([self.dim_hid_1, self.dim_hid_2]), dtype=tf.float32)
@@ -43,7 +47,7 @@ class nn:
 		# accuracy
 		self.tf_acc_, self.tf_acc = tf.metrics.accuracy(tf.argmax(self.tf_y, axis=1), tf.argmax(self.tf_lyr_out, axis=1), name="tf_acc")
 
-		# Back Prop
+	def back_prop(self):
 		# self.tf_optimizer = tf.train.GradientDescentOptimizer(self.lr)
 		self.tf_optimizer = tf.train.AdamOptimizer()
 		self.tf_train = self.tf_optimizer.minimize(self.tf_loss)
