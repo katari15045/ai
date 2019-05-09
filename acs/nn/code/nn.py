@@ -1,53 +1,79 @@
+from conf import conf
 import tensorflow as tf
 import numpy as np
 
 class nn:
 
-	def __init__(self):
-		# layers
-		self.dim_inp = 28*28
-		self.dim_hid_1 = 64
-		self.dim_hid_2 = 32
-		self.dim_out = 10
+	def __init__(self, conf_):
+		self.conf_ = conf_
 
-		# Network Parameters
-		self.batch_size = 32
-		self.epochs = 3
-		self.lr = 0.001
-		self.tf_act = tf.nn.relu
-		self.tf_weight_initializer = tf.initializers.random_normal()
+		# activation
+		if(self.conf_.act == "relu"):
+			self.tf_act = tf.nn.relu
+
+		# weight initializer
+		if(self.conf_.weight_initializer == "random_normal"):
+			self.tf_weight_initializer = tf.initializers.random_normal()
+
+		# optimizer
+		if(self.conf_.optimizer == "adam"):
+			self.tf_optimizer = tf.train.AdamOptimizer()
+		else:
+			self.tf_optimizer = tf.train.GradientDescentOptimizer(self.conf_.lr)
+
+		# loss: refer self.compute_loss()
 
 	def define_tensors(self):
 		# weights
-		self.tf_w1 = tf.Variable(self.tf_weight_initializer([self.dim_inp, self.dim_hid_1]), dtype=tf.float32, name="w1")
-		self.tf_w2 = tf.Variable(self.tf_weight_initializer([self.dim_hid_1, self.dim_hid_2]), dtype=tf.float32, name="w2")
-		self.tf_w3 = tf.Variable(self.tf_weight_initializer([self.dim_hid_2, self.dim_out]), dtype=tf.float32, name="w3")
-
+		self.tf_weights = []
+		ind = 0
+		while(ind < self.conf_.tot_hid_lyrs):
+			cur_dim = [self.conf_.dim_lyrs[ind], self.conf_.dim_lyrs[ind+1]]
+			cur_name = "w" + str(ind+1)
+			cur_tensor = tf.Variable(self.tf_weight_initializer(cur_dim, dtype=tf.float32), name=cur_name)
+			self.tf_weights.append(cur_tensor)
+			ind = ind + 1
+		
 		# biases
-		self.tf_b1 = tf.Variable(tf.zeros(self.dim_hid_1), name="b1")
-		self.tf_b2 = tf.Variable(tf.zeros(self.dim_hid_2), name="b2")
-		self.tf_b3 = tf.Variable(tf.zeros(self.dim_out), name="b3")
+		self.tf_biases = []
+		ind = 1
+		while(ind <= self.conf_.tot_hid_lyrs):
+			cur_dim = self.conf_.dim_lyrs[ind]
+			cur_name = "b" + str(ind)
+			cur_tensor = tf.Variable(tf.zeros(cur_dim), name=cur_name)
+			self.tf_biases.append(cur_tensor)
+			ind = ind + 1
 
 		# input layer
-		self.tf_X = tf.placeholder(tf.float32, shape=[None, self.dim_inp], name="X")
+		dim_inp = self.conf_.dim_lyrs[0]
+		self.tf_X = tf.placeholder(tf.float32, shape=[None, dim_inp], name="X")
 
 		# Ground Truth
-		self.tf_y = tf.placeholder(tf.float32, shape=[None, self.dim_out], name="y")
+		dim_out = self.conf_.dim_lyrs[-1]
+		self.tf_y = tf.placeholder(tf.float32, shape=[None, dim_out], name="y")
 
 	def restore_tensors(self, sess, meta_filepath, ckpt_filepath):
 		saver = tf.train.import_meta_graph(meta_filepath)
 		saver.restore(sess, ckpt_filepath)
 		graph = tf.get_default_graph()
 
-		# weeights
-		self.tf_w1 = graph.get_tensor_by_name("w1:0")
-		self.tf_w2 = graph.get_tensor_by_name("w2:0")
-		self.tf_w3 = graph.get_tensor_by_name("w3:0")
+		# weights
+		self.tf_weights = []
+		count = 1
+		while(count <= self.conf_.tot_hid_lyrs):
+			cur_name = "w" + str(count) + ":0"
+			cur_tensor = graph.get_tensor_by_name(cur_name)
+			self.tf_weights.append(cur_tensor)
+			count = count + 1
 
 		# biases
-		self.tf_b1 = graph.get_tensor_by_name("b1:0")
-		self.tf_b2 = graph.get_tensor_by_name("b2:0")
-		self.tf_b3 = graph.get_tensor_by_name("b3:0")
+		self.tf_biases = []
+		count = 1
+		while(count <= self.conf_.tot_hid_lyrs):
+			cur_name = "b" + str(count) + ":0"
+			cur_tensor = graph.get_tensor_by_name(cur_name)
+			self.tf_biases.append(cur_tensor)
+			count = count + 1
 
 		# input layer
 		self.tf_X = graph.get_tensor_by_name("X:0")
@@ -56,32 +82,40 @@ class nn:
 		self.tf_y = graph.get_tensor_by_name("y:0")
 
 	def forward_prop(self):
-		# Hidden Layers
-		self.tf_lyr_hid_1 = self.tf_act(tf.matmul(self.tf_X, self.tf_w1) + self.tf_b1)
-		self.tf_lyr_hid_2 = self.tf_act(tf.matmul(self.tf_lyr_hid_1, self.tf_w2) + self.tf_b2)
-		self.tf_lyr_out = self.tf_act(tf.matmul(self.tf_lyr_hid_2, self.tf_w3) + self.tf_b3)
+		self.tf_lyrs = []
+		count = 0
+		while(count < self.conf_.tot_hid_lyrs):
+			if(count == 0):
+				cur_inp = self.tf_X
+			else:
+				cur_inp = self.tf_lyrs[-1] # previous layer's output
+			cur_weight = self.tf_weights[count]
+			cur_bias = self.tf_biases[count]
+			cur_tensor = self.tf_act(tf.matmul(cur_inp, cur_weight) + cur_bias)
+			self.tf_lyrs.append(cur_tensor)
+			count = count + 1
 
 	def compute_loss(self):
-		# self.tf_loss = tf.reduce_mean(tf.square(self.tf_lyr_out - self.tf_y))
-		self.tf_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=self.tf_lyr_out, labels=self.tf_y))
+		if(self.conf_.loss == "softmax_crossentropy"):
+			self.tf_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=self.tf_lyrs[-1], labels=self.tf_y))
+		else:
+			self.tf_loss = tf.reduce_mean(tf.square(self.tf_lyrs[-1] - self.tf_y))
 
 	def compute_acc(self):
-		self.tf_acc_, self.tf_acc = tf.metrics.accuracy(tf.argmax(self.tf_y, axis=1), tf.argmax(self.tf_lyr_out, axis=1), name="tf_acc")
+		self.tf_acc_, self.tf_acc = tf.metrics.accuracy(tf.argmax(self.tf_y, axis=1), tf.argmax(self.tf_lyrs[-1], axis=1), name="tf_acc")
 
 	def back_prop(self):
-		# self.tf_optimizer = tf.train.GradientDescentOptimizer(self.lr)
-		self.tf_optimizer = tf.train.AdamOptimizer()
 		self.tf_train = self.tf_optimizer.minimize(self.tf_loss)
 
 	def analyze_epoch(self, x, y, sess):
-		iters = int( len(x) / self.batch_size )
+		iters = int( len(x) / self.conf_.batch_size )
 		loss = []
 		acc = []
-		pred_y = np.array([]).reshape(0, 10)
+		pred_y = np.array([]).reshape(0, self.conf_.dim_lyrs[-1])
 		for iter_ in range(iters):
-			batch_x = x[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
-			batch_y = y[iter_*self.batch_size:(iter_+1)*self.batch_size, :]
-			batch_pred_y, batch_loss, batch_acc = sess.run([self.tf_lyr_out, self.tf_loss, self.tf_acc], 
+			batch_x = x[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
+			batch_y = y[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
+			batch_pred_y, batch_loss, batch_acc = sess.run([self.tf_lyrs[-1], self.tf_loss, self.tf_acc], 
 													feed_dict={self.tf_X:batch_x, self.tf_y:batch_y})
 			pred_y = np.concatenate((pred_y, batch_pred_y))
 			loss.append(batch_loss)

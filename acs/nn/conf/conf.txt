@@ -1,0 +1,13 @@
+dim_inp=784
+dim_hid_1=64
+dim_hid_2=32
+dim_out=10
+---
+batch_size=32
+epochs=3
+lr=0.001
+act=relu
+weight_initializer=random_normal
+optimizer=adam
+loss=softmax_crossentropy
+---

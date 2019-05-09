@@ -1,3 +1,4 @@
+import logging
 from keras.datasets import mnist
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
@@ -21,10 +22,10 @@ class pre_processor:
 		test_y = encoder.fit_transform(test_y).toarray()
 		# train-val split
 		train_x, val_x, train_y, val_y = train_test_split(train_x, train_y, test_size=0.2, random_state=33)
-		print("train_x: {0}".format(train_x.shape))
-		print("train_y: {0}".format(train_y.shape))
-		print("val_x: {0}".format(val_x.shape))
-		print("val_y: {0}".format(val_y.shape))
-		print("test_x: {0}".format(test_x.shape))
-		print("test_y: {0}".format(test_y.shape))
+		logging.info("train_x: {0}".format(train_x.shape))
+		logging.info("train_y: {0}".format(train_y.shape))
+		logging.info("val_x: {0}".format(val_x.shape))
+		logging.info("val_y: {0}".format(val_y.shape))
+		logging.info("test_x: {0}".format(test_x.shape))
+		logging.info("test_y: {0}".format(test_y.shape))
 		return train_x, train_y, val_x, val_y, test_x, test_y
