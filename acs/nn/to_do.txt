@@ -1,1 +1,3 @@
 1. Design Documentation of Solution using EML/class diagrams
+2. Update pre-requisites in github wiki with sklearn, numpy
+3. inline comments

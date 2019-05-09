@@ -1,14 +1,14 @@
 import logging
-from keras.datasets import mnist
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
 import numpy as np
+import tensorflow as tf
 
 class pre_processor:
 
 	def get_data(self, testing=False):
 
-		(train_x, train_y), (test_x, test_y) = mnist.load_data()
+		(train_x, train_y), (test_x, test_y) = tf.keras.datasets.mnist.load_data()
 		if(testing == False):
 			train_x = np.reshape(train_x, (train_x.shape[0], train_x.shape[1]*train_x.shape[2]))
 		else:
