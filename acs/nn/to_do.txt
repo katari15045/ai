@@ -1,0 +1,4 @@
+1. command line args for epochs, batch_size, optimizer, lr, neurons in each hidden layer, act in each hidden layer etc
+2. train.py, test.py, return pred_y after testing
+3. tf.Constant
+4. use previously computed pred for loss, previously computed loss for optimizer
