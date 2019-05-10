@@ -1,4 +1,3 @@
-from conf import conf
 import tensorflow as tf
 import numpy as np
 

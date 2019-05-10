@@ -1,5 +1,5 @@
 dim_inp=784
-dim_hid_1=16
+dim_hid_1=32
 dim_out=10
 ---
 batch_size=16
