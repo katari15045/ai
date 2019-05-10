@@ -1,7 +1,0 @@
-Raw Data : (150, 4) | (150,)
-Fitting 10 folds for each of 440 candidates, totalling 4400 fits
-[Parallel(n_jobs=-1)]: Done 168 tasks      | elapsed:    0.6s
-[Parallel(n_jobs=-1)]: Done 1368 tasks      | elapsed:    3.4s
-[Parallel(n_jobs=-1)]: Done 4400 out of 4400 | elapsed:   11.4s finished
-Best Accuracy : 0.986666666667
-Best Params : {'kernel': 'linear', 'C': 0.5, 'gamma': 3.0517578125e-05}
