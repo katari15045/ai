@@ -44,7 +44,10 @@ class test:
 
 		# post testing
 		self.sess.close()
-		logging.info("pred_y: {0}, acc: {1}, loss: {2}".format(pred_y.shape, acc, loss))
+		if(acc == None and loss == None):
+			logging.info("pred_y: {0},  can't compute acc and loss; ground truth is absent".format(pred_y.shape))
+		else:
+			logging.info("pred_y: {0}, acc: {1}, loss: {2}".format(pred_y.shape, acc, loss))
 
 		return pred_y, acc, loss
 

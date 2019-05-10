@@ -2,8 +2,8 @@ dim_inp=784
 dim_hid_1=32
 dim_out=10
 ---
-batch_size=16
-epochs=12
+batch_size=128
+epochs=3
 lr=0.01
 act=sigmoid
 last_layer_act=sigmoid

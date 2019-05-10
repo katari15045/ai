@@ -152,28 +152,49 @@ class nn:
 
 		self.tf_train = self.tf_optimizer.minimize(self.tf_loss)
 
+	# y would be an empty array (len(y)=0) if ground truth is unavailable
 	def analyze_epoch(self, x, y, sess):
 
 		iters = int( len(x) / self.conf_.batch_size )
-		loss = []
-		acc = []
+		if(len(y) != 0):
+			# accuracy, loss can only be computed when ground truth is available
+			loss = []
+			acc = []
 		pred_y = np.array([]).reshape(0, self.conf_.dim_lyrs[-1])
 
 		for iter_ in range(iters):
 			# extract batch data
 			batch_x = x[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
-			batch_y = y[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
+			if(len(y) != 0):
+				# ground truth is available
+				batch_y = y[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
 
 			# forward propagation
-			batch_pred_y, batch_loss, batch_acc = sess.run([self.tf_lyrs[-1], self.tf_loss, self.tf_acc], 
+			if(len(y) == 0):
+				# ground truth is absent, can't compute accuracy
+				batch_pred_y = sess.run(self.tf_lyrs[-1], 
+													feed_dict={self.tf_X:batch_x})
+			else:
+				# ground truth is present, compute accuracy too
+				batch_pred_y, batch_loss, batch_acc = sess.run([self.tf_lyrs[-1], self.tf_loss, self.tf_acc], 
 													feed_dict={self.tf_X:batch_x, self.tf_y:batch_y})
 
 			# store epoch stats
 			pred_y = np.concatenate((pred_y, batch_pred_y))
-			loss.append(batch_loss)
-			acc.append(batch_acc)
+
+			if(len(y) != 0):
+				# append only if ground truth is present; accuracy, loss can only be computed when ground truth is available
+				loss.append(batch_loss)
+				acc.append(batch_acc)
 
 		# compute mean loss and mean accuracy
-		loss = sum(loss) / len(loss)
-		acc = sum(acc) / len(acc)
+		if(len(y) != 0):
+			# accuracy, loss can only be computed when ground truth is available
+			acc = sum(acc) / len(acc)
+			loss = sum(loss) / len(loss)
+		else:
+			# return acc=None, loss=None when ground truth is absent
+			acc = None
+			loss = None
+
 		return pred_y, loss, acc
