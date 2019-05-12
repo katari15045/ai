@@ -14,7 +14,7 @@ class train:
 		train_x, train_y, val_x, val_y = pre_processor_.get_data()
 
 		# Build Computation Graph
-		self.cnn = cnn(self.conf_)
+		self.cnn = cnn()
 
 		# initialize tensors
 		self.sess = tf.Session()
@@ -24,15 +24,15 @@ class train:
 		logging.info("training...")
 		self.saver = tf.train.Saver(max_to_keep=1)
 
-		for epoch in range(self.conf_.epochs):
+		for epoch in range(self.cnn.epochs):
 
-			iters = int( len(train_x) / self.conf_.batch_size )
+			iters = int( len(train_x) / self.cnn.batch_size )
 
 			for iter_ in range(iters):
 
 				# extract batch data
-				batch_x = train_x[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
-				batch_y = train_y[iter_*self.conf_.batch_size:(iter_+1)*self.conf_.batch_size, :]
+				batch_x = train_x[iter_*self.cnn.batch_size:(iter_+1)*self.cnn.batch_size, :]
+				batch_y = train_y[iter_*self.cnn.batch_size:(iter_+1)*self.cnn.batch_size, :]
 
 				# train
 				self.sess.run(self.cnn.tf_train, feed_dict={self.cnn.tf_X: batch_x, self.cnn.tf_y: batch_y})
