@@ -1,0 +1,67 @@
+----------------------------------------------------------------
+2019-05-12 10:55:37.592434 UTC
+----------------------------------------------------------------
+2019-05-12 10:56:11.756421 UTC
+----------------------------------------------------------------
+2019-05-12 10:57:39.784485 UTC
+train_x: (48000, 28, 28, 1)
+train_y: (48000, 10)
+val_x: (12000, 28, 28, 1)
+val_y: (12000, 10)
+----------------------------------------------------------------
+2019-05-12 10:57:56.143415 UTC
+train_x: (48000, 28, 28, 1)
+train_y: (48000, 10)
+val_x: (12000, 28, 28, 1)
+val_y: (12000, 10)
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\framework\op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\ops\metrics_impl.py:455: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+training...
+----------------------------------------------------------------
+2019-05-12 11:07:02.712040 UTC
+train_x: (48000, 28, 28, 1)
+train_y: (48000, 10)
+val_x: (12000, 28, 28, 1)
+val_y: (12000, 10)
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\framework\op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+----------------------------------------------------------------
+2019-05-12 11:08:46.197923 UTC
+train_x: (48000, 28, 28, 1)
+train_y: (48000, 10)
+val_x: (12000, 28, 28, 1)
+val_y: (12000, 10)
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\framework\op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+----------------------------------------------------------------
+2019-05-12 11:10:42.122924 UTC
+train_x: (48000, 28, 28, 1)
+train_y: (48000, 10)
+val_x: (12000, 28, 28, 1)
+val_y: (12000, 10)
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\framework\op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\ops\metrics_impl.py:455: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+training...
+----------------------------------------------------------------
+2019-05-12 11:12:33.436190 UTC
+train_x: (48000, 28, 28, 1)
+train_y: (48000, 10)
+val_x: (12000, 28, 28, 1)
+val_y: (12000, 10)
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\framework\op_def_library.py:263: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+From C:\Users\Saketh Katari\AppData\Local\Programs\Python\Python36\lib\site-packages\tensorflow\python\ops\metrics_impl.py:455: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+training...
