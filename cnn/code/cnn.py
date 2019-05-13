@@ -82,6 +82,12 @@ class cnn:
 		self.tf_X = tf.placeholder(tf.float32, shape=[None, self.img_rows, self.img_cols, self.img_channels], name="X")
 		self.tf_y = tf.placeholder(tf.float32, shape=[None, self.classes])
 
+	def apply_activation(self, inp, act):
+		if(act == "softmax"):
+			return tf.nn.softmax(inp)
+		# default activation: relu
+		return tf.nn.relu(inp)
+
 	def forward_prop(self, testing=False, sess=None, meta_filepath=None, ckpt_filepath=None):
 
 		if(testing == True):
@@ -128,6 +134,8 @@ class cnn:
 				# define layer
 				lyr = self.conv(input=self.tf_lyrs[-1], filter_rows=filter_rows_, filter_cols=filter_cols_, in_channels=in_channels_, out_channels=out_channels_, stride_rows=stride_rows_, stride_cols=stride_cols_, name=name, testing=testing, graph=graph)
 
+				# activation function
+				lyr = self.apply_activation(lyr, act)
 
 			elif(layer == "max_pool"):
 
@@ -145,6 +153,9 @@ class cnn:
 
 				# define layer
 				lyr = self.max_pool(input=self.tf_lyrs[-1], filter_rows=filter_rows_, filter_cols=filter_cols_, stride_rows=stride_rows_, stride_cols=stride_cols_)
+
+				# activation function
+				lyr = self.apply_activation(lyr, act)
 
 			elif(layer == "fc"):
 
@@ -164,6 +175,8 @@ class cnn:
 				neurons_ = self.get_value_from_line(self.content[self.conf_ind], numeric=True, decimal=False)
 				self.conf_ind = self.conf_ind + 1
 				act = self.get_value_from_line(self.content[self.conf_ind], numeric=False)
+				self.conf_ind = self.conf_ind + 1
+				dropout_rate = self.get_value_from_line(self.content[self.conf_ind], numeric=True, decimal=True)
 
 				# prepare name
 				fc_count = fc_count + 1
@@ -172,14 +185,16 @@ class cnn:
 				# define layer
 				lyr = self.fc(input=self.tf_lyrs[-1], num_inputs=num_inputs_, num_outputs=neurons_, name=name, testing=testing, graph=graph)
 
+				# activation function
+				lyr = self.apply_activation(lyr, act)
+
+				if(dropout_rate != 0.0 and testing == False):
+					# not last FC layer (last FC layer's dropout rate is always 0.0); it's training
+					lyr = tf.nn.dropout(lyr, rate=dropout_rate)
+
+
 			elif(layer == "none"):
 				break
-
-			# handle activation
-			if(act == "relu"):
-				lyr = tf.nn.relu(lyr)
-			elif(act == "softmax"):
-				lyr = tf.nn.softmax(lyr)
 
 			# add current layer to existing layers
 			self.tf_lyrs.append(lyr)

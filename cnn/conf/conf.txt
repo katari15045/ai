@@ -46,9 +46,11 @@ act=relu
 layer=fc
 neurons=128
 act=relu
+dropout_rate=0.3
 ---
 layer=fc
 neurons=10
 act=softmax
+dropout_rate=0.0
 ---
 layer=none
