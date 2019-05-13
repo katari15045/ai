@@ -15,6 +15,10 @@ class train:
 
 		# Build Computation Graph
 		self.cnn = cnn()
+		self.cnn.forward_prop()
+		self.cnn.compute_loss()
+		self.cnn.compute_acc()
+		self.cnn.back_prop()
 
 		# initialize tensors
 		self.sess = tf.Session()

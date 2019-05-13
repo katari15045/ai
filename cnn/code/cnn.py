@@ -3,10 +3,16 @@ import numpy as np
 
 class cnn:
 
-	def conv(self, input, filter_rows, filter_cols, in_channels, out_channels, stride_rows, stride_cols):
+	def conv(self, input, filter_rows, filter_cols, in_channels, out_channels, stride_rows, stride_cols, name, testing=False, graph=None):
 		shape = [filter_rows, filter_cols, in_channels, out_channels]
-		weights = tf.Variable(tf.truncated_normal(shape, mean=self.init_weight_mean, stddev=self.init_weight_std))
-		biases = tf.Variable(tf.constant(self.init_bias, shape=[out_channels]))
+		w_name = "w_" + name
+		b_name = "b_" + name
+		if(testing == True):
+			weights = graph.get_tensor_by_name(w_name + ":0")
+			biases = graph.get_tensor_by_name(b_name + ":0")
+		else:
+			weights = tf.Variable(tf.truncated_normal(shape, mean=self.init_weight_mean, stddev=self.init_weight_std), name=w_name)
+			biases = tf.Variable(tf.constant(self.init_bias, shape=[out_channels]), name=b_name)
 		layer = tf.nn.conv2d(input, filter=weights, strides=[1, stride_rows, stride_cols, 1], padding="SAME")
 		layer = layer + biases
 		return layer
@@ -15,10 +21,16 @@ class cnn:
 		layer = tf.nn.max_pool(value=input, ksize=[1, filter_rows, filter_cols, 1], strides=[1, stride_rows, stride_cols, 1], padding="SAME")
 		return layer
 
-	def fc(self, input, num_inputs, num_outputs):
+	def fc(self, input, num_inputs, num_outputs, name, testing=False, graph=None):
 		shape = [num_inputs, num_outputs]
-		weights = tf.Variable(tf.truncated_normal(shape, mean=self.init_weight_mean, stddev=self.init_weight_std))
-		biases = tf.Variable(tf.constant(self.init_bias, shape=[num_outputs]))
+		w_name = "w_" + name
+		b_name = "b_" + name
+		if(testing == True):
+			weights = graph.get_tensor_by_name(w_name + ":0")
+			biases = graph.get_tensor_by_name(b_name + ":0")
+		else:
+			weights = tf.Variable(tf.truncated_normal(shape, mean=self.init_weight_mean, stddev=self.init_weight_std), name=w_name)
+			biases = tf.Variable(tf.constant(self.init_bias, shape=[num_outputs]), name=b_name)
 		layer = tf.matmul(input, weights) + biases
 		return layer
 
@@ -70,17 +82,21 @@ class cnn:
 		self.tf_X = tf.placeholder(tf.float32, shape=[None, self.img_rows, self.img_cols, self.img_channels], name="X")
 		self.tf_y = tf.placeholder(tf.float32, shape=[None, self.classes])
 
-		# define computation graph
-		self.forward_prop()
-		self.compute_loss()
-		self.compute_acc()
-		self.back_prop()
+	def forward_prop(self, testing=False, sess=None, meta_filepath=None, ckpt_filepath=None):
 
-	def forward_prop(self):
+		if(testing == True):
+			# restore from files
+			saver = tf.train.import_meta_graph(meta_filepath)
+			saver.restore(sess, ckpt_filepath)
+			graph = tf.get_default_graph()
+		else:
+			graph = None
 
 		# add input layer
 		self.tf_lyrs.append(self.tf_X)
 		first_fc = True
+		conv_count = 0
+		fc_count = 0
 
 		while(True):
 
@@ -105,8 +121,13 @@ class cnn:
 				self.conf_ind = self.conf_ind + 1
 				act = self.get_value_from_line(self.content[self.conf_ind], numeric=False)
 
+				# prepare name
+				conv_count = conv_count + 1
+				name = "conv_" + str(conv_count)
+
 				# define layer
-				lyr = self.conv(input=self.tf_lyrs[-1], filter_rows=filter_rows_, filter_cols=filter_cols_, in_channels=in_channels_, out_channels=out_channels_, stride_rows=stride_rows_, stride_cols=stride_cols_)
+				lyr = self.conv(input=self.tf_lyrs[-1], filter_rows=filter_rows_, filter_cols=filter_cols_, in_channels=in_channels_, out_channels=out_channels_, stride_rows=stride_rows_, stride_cols=stride_cols_, name=name, testing=testing, graph=graph)
+
 
 			elif(layer == "max_pool"):
 
@@ -144,8 +165,12 @@ class cnn:
 				self.conf_ind = self.conf_ind + 1
 				act = self.get_value_from_line(self.content[self.conf_ind], numeric=False)
 
+				# prepare name
+				fc_count = fc_count + 1
+				name = "fc_" + str(fc_count)
+
 				# define layer
-				lyr = self.fc(input=self.tf_lyrs[-1], num_inputs=num_inputs_, num_outputs=neurons_)
+				lyr = self.fc(input=self.tf_lyrs[-1], num_inputs=num_inputs_, num_outputs=neurons_, name=name, testing=testing, graph=graph)
 
 			elif(layer == "none"):
 				break

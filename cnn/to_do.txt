@@ -1,0 +1,2 @@
+1. dropout
+2. handle when test_y is absent
